@@ -1,161 +1,1197 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta charset="UTF-8">
+  <title>Mutaba'ah Yaumiyah</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="https://s-url.site/images/logo.png">
 
-  <title>Yaumi — Mutaba'ah Yaumiyah</title>
-  <meta name="description" content="Mutaba'ah Yaumiyah — ruang kecil untuk menjaga istiqamah setiap hari.">
-  <meta name="theme-color" content="#103d30">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-  <!-- Browser favicon -->
-  <link rel="icon" type="image/png" href="https://s-url.site/images/logo.png?v=3">
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-  <!-- iPhone / iPad Home Screen -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://s-url.site/images/logo.png?v=3">
-  <meta name="apple-mobile-web-app-title" content="Yaumi">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- SweetAlert2 + Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root {
-      --forest-950:#0c2f25;
-      --forest-900:#103d30;
-      --forest-800:#185642;
-      --gold:#caa44c;
-      --paper:#f6f8f7;
-      --text:#1c2b26;
+      --forest-950: #0c2f25;
+      --forest-900: #103d30;
+      --forest-800: #185642;
+      --forest-700: #1d6a50;
+      --sage-100: #edf5f0;
+      --sage-200: #dfece5;
+      --sage-300: #c8ddd1;
+      --ink: #1c2b26;
+      --muted: #71817a;
+      --line: #e7eee9;
+      --surface: #ffffff;
+      --canvas: #f4f7f5;
+      --gold: #caa44c;
+      --gold-soft: #f6efdc;
+      --danger-soft: #fcedeb;
+      --warning-soft: #fff6df;
+      --shadow-sm: 0 4px 16px rgba(13, 47, 37, .05);
+      --shadow-md: 0 18px 45px rgba(13, 47, 37, .09);
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
     }
 
-    * { box-sizing:border-box; }
-    html, body {
-      margin:0;
-      width:100%;
-      height:100%;
-      overflow:hidden;
-      background:var(--paper);
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    }
-
-    #app-frame {
-      width:100%;
-      height:100%;
-      border:0;
-      display:block;
-      background:#fff;
-    }
-
-    /* Loading screen */
-    #loader {
-      position:fixed;
-      inset:0;
-      z-index:20;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
       background:
-        radial-gradient(circle at 80% 10%, rgba(202,164,76,.18), transparent 22%),
-        linear-gradient(145deg, var(--forest-950), var(--forest-800));
-      transition:opacity .35s ease, visibility .35s ease;
+        radial-gradient(circle at top right, rgba(202,164,76,.08), transparent 28%),
+        linear-gradient(180deg, #f8fbf9 0%, var(--canvas) 46%, #f3f6f4 100%);
+      min-height: 100vh;
     }
 
-    #loader.hidden {
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
+    button, input { font: inherit; }
+    .app-shell { max-width: 1220px; margin: 0 auto; padding: 26px 22px 46px; }
+
+    /* ---------- TOP BAR ---------- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      text-decoration: none;
+      color: inherit;
+    }
+    .brand-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: linear-gradient(145deg, var(--forest-700), var(--forest-950));
+      box-shadow: 0 10px 25px rgba(16,61,48,.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .brand-mark::after {
+      content: '';
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      position: absolute;
+      right: -12px;
+      bottom: -12px;
+    }
+    .brand-name { font-size: 1.08rem; font-weight: 700; letter-spacing: -.02em; }
+    .brand-sub { color: var(--muted); font-size: .78rem; margin-top: 1px; }
+    .user-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 13px 8px 9px;
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(17,61,48,.08);
+      border-radius: 999px;
+      box-shadow: var(--shadow-sm);
+      color: var(--forest-900);
+      font-size: .88rem;
+      font-weight: 600;
+    }
+    .user-avatar {
+      width: 28px; height: 28px; border-radius: 50%;
+      display:grid; place-items:center;
+      background: var(--sage-100); color: var(--forest-800);
+      font-size: .8rem;
     }
 
-    .loader-card {
-      width:min(360px, calc(100% - 32px));
-      text-align:center;
-      color:#fff;
+    /* ---------- HERO ---------- */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 31px 32px;
+      border-radius: 30px;
+      color: #fff;
+      background:
+        radial-gradient(circle at 82% 12%, rgba(202,164,76,.25), transparent 24%),
+        radial-gradient(circle at 7% 92%, rgba(93,168,136,.16), transparent 22%),
+        linear-gradient(135deg, var(--forest-950), var(--forest-800));
+      box-shadow: var(--shadow-md);
+      margin-bottom: 20px;
     }
-
-    .logo-wrap {
-      width:78px;
-      height:78px;
-      margin:0 auto 18px;
-      border-radius:22px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow:0 18px 45px rgba(0,0,0,.18);
-      display:grid;
-      place-items:center;
+    .hero::before {
+      content:''; position:absolute; inset: auto -60px -100px auto;
+      width: 280px; height: 280px; border-radius:50%;
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow: 0 0 0 28px rgba(255,255,255,.02), 0 0 0 56px rgba(255,255,255,.018);
     }
-
-    .logo-wrap img {
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .hero-grid { display:grid; grid-template-columns: 1fr auto; gap:30px; align-items:center; position:relative; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .16em; font-size: .68rem; font-weight:700; color: rgba(255,255,255,.66); margin-bottom: 9px; }
+    .hero-title { font-family:'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3.2rem); line-height:1.06; margin:0 0 9px; }
+    .hero-copy { max-width: 660px; color: rgba(255,255,255,.78); font-size:.95rem; line-height:1.7; margin:0; }
+    .hero-date {
+      display:inline-flex; align-items:center; gap:8px; margin-top:18px;
+      padding:8px 11px; border-radius:999px;
+      background: rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.09);
+      color:#fff; font-size:.82rem;
     }
+    .hero-progress { width: 156px; height: 156px; position:relative; display:grid; place-items:center; }
+    .hero-progress svg { width:100%; height:100%; transform:rotate(-90deg); }
+    .hero-progress-track { fill:none; stroke:rgba(255,255,255,.12); stroke-width:10; }
+    .hero-progress-value { fill:none; stroke:var(--gold); stroke-width:10; stroke-linecap:round; transition:stroke-dashoffset .4s ease; }
+    .hero-progress-label { position:absolute; inset:0; display:grid; place-items:center; text-align:center; }
+    .hero-progress-value-text { font-size:1.8rem; font-weight:700; line-height:1; }
+    .hero-progress-caption { margin-top:4px; font-size:.7rem; color:rgba(255,255,255,.66); text-transform:uppercase; letter-spacing:.1em; }
 
-    .loader-title {
-      font-size:1.35rem;
-      font-weight:700;
-      margin-bottom:6px;
-      letter-spacing:-.02em;
+    /* ---------- NAV ---------- */
+    .app-nav {
+      display:flex; gap:7px; padding:7px;
+      background: rgba(255,255,255,.88);
+      border:1px solid rgba(17,61,48,.08);
+      border-radius:18px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom:24px;
+      position: sticky; top: 12px; z-index: 20;
+      backdrop-filter: blur(14px);
     }
-
-    .loader-subtitle {
-      color:rgba(255,255,255,.72);
-      font-size:.86rem;
+    .app-nav .nav-link {
+      flex:1; border:0; border-radius:13px;
+      color: var(--muted); font-weight:700; padding:11px 14px;
+      transition: .2s ease; white-space:nowrap;
     }
+    .app-nav .nav-link:hover { color:var(--forest-800); background:var(--sage-100); }
+    .app-nav .nav-link.active { background:var(--forest-900); color:#fff; box-shadow:0 8px 18px rgba(16,61,48,.16); }
+    .app-nav .nav-link i { margin-right:6px; }
 
-    .spinner {
-      width:26px;
-      height:26px;
-      margin:18px auto 0;
-      border:3px solid rgba(255,255,255,.18);
-      border-top-color:var(--gold);
-      border-radius:50%;
-      animation:spin .8s linear infinite;
+    /* ---------- CONTENT CARD ---------- */
+    .section-card {
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 24px;
+      margin-bottom: 20px;
     }
+    .section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:20px; }
+    .section-kicker { color:var(--forest-700); text-transform:uppercase; letter-spacing:.15em; font-size:.66rem; font-weight:700; margin-bottom:5px; }
+    .section-title { font-size:1.2rem; font-weight:700; margin:0; letter-spacing:-.02em; }
+    .section-subtitle { color:var(--muted); font-size:.85rem; margin:4px 0 0; line-height:1.55; }
 
-    @keyframes spin { to { transform:rotate(360deg); } }
+    .date-picker {
+      min-width: 160px; border-radius: 13px; border:1px solid var(--line);
+      background:#fbfdfc; color:var(--forest-900); font-weight:600; padding:10px 12px;
+      box-shadow:none !important;
+    }
+    .date-picker:focus { border-color:var(--sage-300); box-shadow:0 0 0 4px rgba(29,106,80,.08) !important; }
 
-    /* Safe-area support for iPhone */
-    @supports(padding:max(0px)) {
-      #app-frame {
-        height:100dvh;
-      }
+    /* ---------- DASHBOARD MICRO CARDS ---------- */
+    .mini-stats { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+    .mini-stat { padding:14px 16px; border:1px solid var(--line); border-radius:15px; background:#fbfdfc; }
+    .mini-stat-label { color:var(--muted); font-size:.74rem; }
+    .mini-stat-value { margin-top:4px; font-size:1.18rem; font-weight:700; color:var(--forest-900); }
+
+    /* ---------- HABIT LIST ---------- */
+    .habit-list { display:grid; gap:12px; }
+    .habit-item {
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg, #fff, #fcfefd);
+      padding:16px 17px;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .habit-item:hover { transform:translateY(-1px); box-shadow:0 10px 24px rgba(13,47,37,.06); }
+    .habit-item.is-complete { border-color:#cbe3d6; background:linear-gradient(180deg,#ffffff,#f7fcf9); }
+    .habit-top { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .habit-info { min-width:0; display:flex; align-items:center; gap:12px; }
+    .habit-icon {
+      flex:0 0 auto; width:40px; height:40px; border-radius:13px;
+      display:grid; place-items:center; color:var(--forest-800); background:var(--sage-100);
+    }
+    .habit-name { font-weight:700; font-size:.98rem; margin-bottom:2px; }
+    .habit-meta { color:var(--muted); font-size:.76rem; }
+    .habit-input-wrap {
+      display:flex; align-items:center; gap:5px; flex:0 0 auto;
+      padding:4px; background:#f5f8f6; border:1px solid var(--line); border-radius:13px;
+    }
+    .habit-input {
+      width:72px; border:0; background:transparent; text-align:center; font-weight:800;
+      color:var(--forest-900); font-size:1rem; padding:7px 4px;
+    }
+    .habit-input:focus { outline: none; }
+    .habit-unit { min-width:54px; text-align:left; color:var(--muted); font-size:.72rem; padding-right:6px; }
+    .quick-full {
+      width:34px; height:34px; border:0; border-radius:10px; background:#e8f4ed; color:var(--forest-700);
+      display:grid; place-items:center; transition:.2s ease;
+    }
+    .quick-full:hover { background:var(--forest-700); color:#fff; }
+    .habit-progress-row { display:flex; align-items:center; gap:10px; margin-top:13px; }
+    .habit-progress { height:8px; border-radius:999px; background:#edf2ef; overflow:hidden; flex:1; }
+    .habit-progress-bar { height:100%; border-radius:999px; transition:width .35s ease; background:linear-gradient(90deg, #4d9a74, var(--forest-700)); }
+    .habit-progress-bar.warn { background:linear-gradient(90deg,#dfc066,#c89c2f); }
+    .habit-progress-bar.low { background:linear-gradient(90deg,#e1a19c,#cf6d66); }
+    .habit-percent { min-width:43px; text-align:right; color:var(--muted); font-size:.74rem; font-weight:700; }
+
+    .bulk-action {
+      display:flex; justify-content:space-between; align-items:center; gap:14px;
+      padding:12px 14px; border:1px dashed #c9dcd1; border-radius:15px;
+      background:linear-gradient(90deg,#f6fbf8,#fbf7ea); margin-bottom:14px;
+    }
+    .bulk-action-text { font-size:.8rem; color:var(--forest-800); font-weight:600; }
+    .bulk-action-btn { border:0; background:var(--forest-900); color:#fff; border-radius:10px; padding:8px 12px; font-size:.78rem; font-weight:700; }
+
+    .save-bar {
+      display:flex; justify-content:space-between; align-items:center; gap:14px;
+      margin-top:20px; padding-top:17px; border-top:1px solid var(--line);
+    }
+    .save-hint { color:var(--muted); font-size:.76rem; }
+    .btn-save {
+      border:0; border-radius:13px; padding:12px 18px; background:var(--forest-900); color:#fff; font-weight:700;
+      box-shadow:0 8px 20px rgba(16,61,48,.16); transition:.2s ease;
+    }
+    .btn-save:hover { background:var(--forest-950); transform:translateY(-1px); }
+
+    /* ---------- EMPTY STATE ---------- */
+    .empty-state {
+      border:1px dashed var(--sage-300); border-radius:18px; padding:34px 20px; text-align:center; background:#fbfdfc;
+    }
+    .empty-icon { width:52px; height:52px; border-radius:16px; background:var(--sage-100); display:grid; place-items:center; margin:0 auto 10px; color:var(--forest-700); font-size:1.2rem; }
+    .empty-title { font-weight:700; margin-bottom:4px; }
+    .empty-copy { color:var(--muted); font-size:.82rem; margin:0; }
+
+    /* ---------- FORMS ---------- */
+    .target-form {
+      display:grid; grid-template-columns: 1.7fr .8fr .9fr auto; gap:10px; padding:14px;
+      background:#f8fbf9; border:1px solid var(--line); border-radius:18px; margin-bottom:22px;
+    }
+    .field-label { display:block; margin-bottom:6px; color:var(--muted); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+    .form-control.pro {
+      border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff; color:var(--ink);
+      min-height:44px;
+    }
+    .form-control.pro:focus { border-color:#b7d1c2; box-shadow:0 0 0 4px rgba(29,106,80,.07); }
+    .btn-gold {
+      min-height:44px; border:0; border-radius:12px; padding:0 16px; background:var(--gold); color:#fff; font-weight:700;
+      align-self:end; box-shadow:0 8px 18px rgba(202,164,76,.22);
+    }
+    .btn-gold:hover { background:#b69135; color:#fff; }
+
+    /* ---------- TABLE ---------- */
+    .table-shell { border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+    .pro-table { margin:0; }
+    .pro-table thead th { border-bottom:1px solid var(--line); color:var(--muted); font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; padding:13px 14px; background:#fafcfb; }
+    .pro-table tbody td { padding:14px; border-color:#eef3ef; font-size:.84rem; vertical-align:middle; }
+    .pro-table tbody tr:hover { background:#fbfdfc; }
+    .status-badge { display:inline-flex; align-items:center; gap:6px; padding:6px 9px; border-radius:9px; font-size:.72rem; font-weight:700; background:var(--sage-100); color:var(--forest-800); }
+    .action-icon { width:34px; height:34px; border:0; border-radius:10px; display:inline-grid; place-items:center; background:#f4f7f5; color:var(--muted); }
+    .action-icon:hover { background:var(--sage-100); color:var(--forest-800); }
+    .action-icon.danger:hover { background:var(--danger-soft); color:#ba5a52; }
+
+    /* ---------- PROGRESS ---------- */
+    .insight-card {
+      border-radius:20px; padding:17px 18px; background:linear-gradient(135deg,#f1f8f4,#fffaf0); border:1px solid var(--line); margin-bottom:18px;
+    }
+    .insight-card .lead-icon { width:40px; height:40px; border-radius:12px; background:#fff; border:1px solid var(--line); display:grid; place-items:center; color:var(--gold); }
+    .chart-card { border:1px solid var(--line); border-radius:20px; background:#fff; padding:16px; height:100%; box-shadow:var(--shadow-sm); }
+    .chart-title { font-size:.86rem; font-weight:700; margin-bottom:12px; }
+    .chart-wrap { height:230px; }
+    .chart-card .insight-card { margin:0; padding:12px 13px; border-radius:14px; background:linear-gradient(180deg,#fbfdfc 0%,#f5f9f7 100%); box-shadow:none; }
+    .ramadan-countdown-popup { border-radius:26px !important; padding:24px !important; box-shadow:0 24px 70px rgba(13,47,37,.18) !important; }
+    .ramadan-countdown-popup .swal2-confirm { border-radius:12px !important; font-family:'DM Sans',sans-serif !important; font-weight:700 !important; padding:10px 18px !important; }
+    canvas { width:100% !important; height:100% !important; background:transparent; margin:0; padding:0; box-shadow:none; border:0; border-radius:0; }
+
+    /* ---------- LOADER ---------- */
+    .loader { display:none; text-align:center; padding:34px 10px; }
+    .loader .spinner-border { width:28px; height:28px; color:var(--forest-700) !important; }
+
+    /* ---------- PAGINATION ---------- */
+    .pagination .page-link { border:1px solid var(--line); color:var(--forest-800); background:#fff; border-radius:9px !important; margin:0 3px; min-width:34px; text-align:center; }
+    .pagination .page-item.active .page-link { background:var(--forest-900); border-color:var(--forest-900); color:#fff; }
+
+    /* ---------- FOOTER ---------- */
+    .footer-note { text-align:center; color:#88958f; font-size:.72rem; padding-top:8px; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns:1fr; }
+      .hero-progress { width:120px; height:120px; }
+      .hero { padding:25px 23px; }
+      .target-form { grid-template-columns:1fr 1fr; }
+      .target-form .form-wide { grid-column:span 2; }
+      .target-form .btn-gold { grid-column:span 2; }
+    }
+    @media (max-width: 700px) {
+      .app-shell { padding:16px 12px 32px; }
+      .topbar { margin-bottom:15px; }
+      .brand-sub { display:none; }
+      .user-pill span.name-label { max-width:105px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .hero { border-radius:22px; }
+      .hero-title { font-size:2rem; }
+      .app-nav { gap:4px; padding:5px; top:7px; }
+      .app-nav .nav-link { font-size:.75rem; padding:9px 7px; }
+      .app-nav .nav-link i { display:block; margin:0 0 2px; font-size:1rem; }
+      .section-card { padding:17px 13px; border-radius:20px; }
+      .section-head { align-items:flex-start; }
+      .mini-stats { grid-template-columns:1fr 1fr 1fr; gap:7px; }
+      .mini-stat { padding:11px 10px; }
+      .mini-stat-value { font-size:1rem; }
+      .habit-item { padding:14px 12px; }
+      .habit-top { align-items:flex-start; }
+      .habit-info { gap:9px; }
+      .habit-icon { width:36px; height:36px; }
+      .habit-name { font-size:.9rem; }
+      .habit-input-wrap { width:149px; }
+      .habit-input { width:58px; }
+      .save-bar { flex-direction:column; align-items:stretch; }
+      .btn-save { width:100%; }
+      .bulk-action { align-items:flex-start; flex-direction:column; }
+      .bulk-action-btn { width:100%; }
+      .target-form { grid-template-columns:1fr 1fr; }
+      .target-form .form-wide { grid-column:span 2; }
+      .target-form .btn-gold { grid-column:span 2; }
+      .table-shell { overflow-x:auto; }
+      .pro-table { min-width:680px; }
+      .chart-wrap { height:200px; }
+    }
+    @media (max-width: 430px) {
+      .hero-copy { font-size:.86rem; }
+      .hero-date { font-size:.76rem; }
+      .mini-stats { gap:5px; }
+      .mini-stat-label { font-size:.66rem; }
+      .mini-stat-value { font-size:.92rem; }
+      .habit-top { gap:9px; }
+      .habit-input-wrap { width:136px; }
+      .habit-input { width:50px; }
+      .habit-unit { min-width:44px; }
     }
   </style>
 </head>
 <body>
-  <div id="loader" aria-hidden="true">
-    <div class="loader-card">
-      <div class="logo-wrap">
-        <img src="https://s-url.site/images/logo.png?v=3" alt="Yaumi">
-      </div>
-      <div class="loader-title">Mutaba'ah Yaumiyah</div>
-      <div class="loader-subtitle">Menyiapkan ruang kecil untuk menjaga istiqamah…</div>
-      <div class="spinner"></div>
-    </div>
-  </div>
+  <main class="app-shell">
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <a href="#" class="brand" aria-label="Mutaba'ah Yaumiyah">
+        <div class="brand-mark"><i class="bi bi-moon-stars-fill"></i></div>
+        <div>
+          <div class="brand-name">Mutaba'ah Yaumiyah</div>
+          <div class="brand-sub">Ruang kecil untuk menggapai istiqamah</div>
+        </div>
+      </a>
 
-  <iframe
-    id="app-frame"
-    title="Mutaba'ah Yaumiyah"
-    src="https://script.google.com/macros/s/AKfycbzPqzfySC-PaOv-ikMam9mtpWEHoTh1jG91gV8LPC6lSlxMTa_GMIirnyGdoilFaP-g/exec"
-    allow="fullscreen"
-    referrerpolicy="strict-origin-when-cross-origin">
-  </iframe>
+      <div class="user-pill">
+        <div class="user-avatar"><i class="bi bi-person-fill"></i></div>
+        <span class="name-label"><?= userName ?></span>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">Hari ini • ruang refleksi</div>
+          <h1 class="hero-title">Ahlan wa sahlan, <?= userName ?>.</h1>
+          <p class="hero-copy">Umar bin Khattab ra. berkata “Hendaklah kalian menghisab diri kalian sebelum kalian dihisab". Tidak perlu sempurna di awal. Yang penting teruslah beramal. Catat amal hari ini, lihat progresmu, lalu lanjutkan lagi besok. Semoga Allah mudahkan kita untuk istiqomah</p>
+          <div class="hero-date"><i class="bi bi-calendar3"></i><span id="heroDateText">Memuat tanggal…</span></div>
+        </div>
+        <div class="hero-progress" aria-label="Progress hari ini">
+          <svg viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="hero-progress-track" cx="60" cy="60" r="48"></circle>
+            <circle id="heroProgressRing" class="hero-progress-value" cx="60" cy="60" r="48" stroke-dasharray="301.59" stroke-dashoffset="301.59"></circle>
+          </svg>
+          <div class="hero-progress-label">
+            <div>
+              <div class="hero-progress-value-text" id="heroProgressPercent">0%</div>
+              <div class="hero-progress-caption">hari ini</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <nav class="app-nav" role="tablist" aria-label="Navigasi utama">
+      <button class="nav-link active" id="harian-tab" data-bs-toggle="tab" data-bs-target="#harian" type="button" role="tab" onclick="loadTabHarian()"><i class="bi bi-check2-circle"></i>Harian</button>
+      <button class="nav-link" id="riwayat-tab" data-bs-toggle="tab" data-bs-target="#riwayat" type="button" role="tab" onclick="loadTabRiwayat()"><i class="bi bi-clock-history"></i>Riwayat</button>
+      <button class="nav-link" id="target-tab" data-bs-toggle="tab" data-bs-target="#target" type="button" role="tab" onclick="loadTabTarget()"><i class="bi bi-bullseye"></i>Target</button>
+      <button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" onclick="loadTabProgress()"><i class="bi bi-graph-up-arrow"></i>Progress</button>
+    </nav>
+
+    <div class="tab-content" id="myTabContent">
+      <!-- TAB HARIAN -->
+      <div class="tab-pane fade show active" id="harian" role="tabpanel">
+        <section class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Daily practice</div>
+              <h2 class="section-title">Catatan amal hari ini</h2>
+              <p class="section-subtitle"></p>
+            </div>
+            <input type="date" id="tanggalLog" class="form-control date-picker" onchange="loadTabHarian()">
+          </div>
+
+          <div id="loaderHarian" class="loader"><div class="spinner-border"></div></div>
+
+          <div class="mini-stats" id="dailyStats">
+            <div class="mini-stat"><div class="mini-stat-label">Rata-rata capaian</div><div class="mini-stat-value" id="statAverage">0%</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">Target selesai</div><div class="mini-stat-value" id="statCompleted">0 / 0</div></div>
+            <div class="mini-stat"><div class="mini-stat-label">Total amalan</div><div class="mini-stat-value" id="statTotal">0</div></div>
+          </div>
+
+          <div id="bulkActionContainer" style="display:none;">
+            <div class="bulk-action">
+              <div class="bulk-action-text"><i class="bi bi-stars me-1"></i> Sudah siap menutup semua target hari ini?</div>
+              <button class="bulk-action-btn" onclick="checkSemuaAmalan()">Selesaikan semua</button>
+            </div>
+          </div>
+
+          <div id="listHarian" class="habit-list"></div>
+
+          <div class="save-bar">
+            <div class="save-hint"><i class="bi bi-shield-check me-1"></i> Perubahan hanya tersimpan setelah tombol Simpan ditekan.</div>
+            <button class="btn-save" onclick="simpanLogHarian()"><i class="bi bi-cloud-arrow-up me-2"></i>Simpan catatan</button>
+          </div>
+        </section>
+      </div>
+
+      <!-- TAB RIWAYAT -->
+      <div class="tab-pane fade" id="riwayat" role="tabpanel">
+        <section class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Reflection</div>
+              <h2 class="section-title">Riwayat pengisian</h2>
+              <p class="section-subtitle"></p>
+            </div>
+            <input type="date" id="filterRiwayat" class="form-control date-picker" onchange="loadTabRiwayat()">
+          </div>
+
+          <div id="loaderRiwayat" class="loader"><div class="spinner-border"></div></div>
+
+          <div class="table-shell">
+            <table class="table pro-table align-middle">
+              <thead>
+                <tr><th>Tanggal</th><th>Amalan</th><th>Capaian</th><th class="text-end">Aksi</th></tr>
+              </thead>
+              <tbody id="tableRiwayat"></tbody>
+            </table>
+          </div>
+
+          <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center mb-0" id="paginationControls"></ul>
+          </nav>
+        </section>
+      </div>
+
+      <!-- TAB TARGET -->
+      <div class="tab-pane fade" id="target" role="tabpanel">
+        <section class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Habit design</div>
+              <h2 class="section-title">Buatlah target yang realistis</h2>
+              <p class="section-subtitle">Target yang realistis memudahkanmu untuk menggapai istiqomah.</p>
+            </div>
+          </div>
+
+          <div class="target-form">
+            <div class="form-wide">
+              <label class="field-label" for="newAmalan">Nama amalan</label>
+              <input type="text" id="newAmalan" class="form-control pro" placeholder="Contoh: Tahajud">
+            </div>
+            <div>
+              <label class="field-label" for="newTarget">Target</label>
+              <input type="number" id="newTarget" class="form-control pro" min="0" placeholder="2">
+            </div>
+            <div>
+              <label class="field-label" for="newSatuan">Satuan</label>
+              <input type="text" id="newSatuan" class="form-control pro" placeholder="Rakaat">
+            </div>
+            <button class="btn-gold" onclick="tambahAmalan()"><i class="bi bi-plus-lg me-1"></i>Tambah target</button>
+          </div>
+
+          <div class="section-head" style="margin-bottom:12px;">
+            <div>
+              <div class="section-kicker">Active habits</div>
+              <h3 class="section-title" style="font-size:1rem;">Daftar amalan aktif</h3>
+            </div>
+          </div>
+
+          <div id="loaderTarget" class="loader"><div class="spinner-border"></div></div>
+          <div class="table-shell">
+            <table class="table pro-table text-center align-middle">
+              <thead><tr><th>Urutan</th><th class="text-start">Amalan</th><th>Target</th><th>Satuan</th><th class="text-end">Aksi</th></tr></thead>
+              <tbody id="tableTarget"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- TAB PROGRESS -->
+      <div class="tab-pane fade" id="progress" role="tabpanel">
+        <section class="section-card">
+          <div class="section-head">
+            <div>
+              <div class="section-kicker">Personal growth</div>
+              <h2 class="section-title">Lihat pola progresmu</h2>
+              <p class="section-subtitle">Gunakan data untuk memahami ritme, bukan untuk menghakimi diri sendiri. Teruslah meminta pertolongan Allah agar dimudahkan untuk beramal shalih ya!</p>
+            </div>
+          </div>
+
+          <div id="loaderProgress" class="loader"><div class="spinner-border"></div></div>
+          <div id="motivasiOverall"></div>
+          <div class="chart-card mb-4">
+            <div class="chart-title">Rata-rata capaian 7 hari terakhir</div>
+            <div class="chart-wrap"><canvas id="chartOverall"></canvas></div>
+          </div>
+
+          <div class="section-head" style="margin-bottom:12px;">
+            <div>
+              <div class="section-kicker">By habit</div>
+              <h3 class="section-title" style="font-size:1rem;">Rincian per amalan</h3>
+            </div>
+          </div>
+          <div class="row g-3" id="chartsContainer"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="footer-note">Mutaba'ah Yaumiyah by nxhub.id • Satu langkah kecil setiap hari.</div>
+  </main>
 
   <script>
-    const frame = document.getElementById('app-frame');
-    const loader = document.getElementById('loader');
+    const USER_NAME = "<?= userName ?>";
+    document.getElementById('tanggalLog').valueAsDate = new Date();
 
-    function hideLoader() {
-      loader.classList.add('hidden');
+    let globalAmalan = [];
+    let chartInstances = [];
+    let riwayatData = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // ---------- APP HELPERS ----------
+    function setHeroDate(dateValue) {
+      const el = document.getElementById('heroDateText');
+      const date = dateValue ? new Date(dateValue + 'T00:00:00') : new Date();
+      el.textContent = new Intl.DateTimeFormat('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }).format(date);
     }
 
-    frame.addEventListener('load', hideLoader);
+    function showLoading(title = 'Memproses…') {
+      Swal.fire({ title, allowOutsideClick:false, allowEscapeKey:false, showConfirmButton:false, didOpen:() => Swal.showLoading() });
+    }
 
-    // Fallback agar loading screen tidak tertahan bila browser menunda event load.
-    setTimeout(hideLoader, 8000);
+    function handleError(err, loaderId) {
+      if (loaderId) {
+        const el = document.getElementById(loaderId);
+        if (el) el.style.display = 'none';
+      }
+      Swal.fire({ icon:'error', title:'Terjadi kendala', text: err?.message || 'Silakan coba lagi.', confirmButtonColor:'#103d30' });
+    }
+
+    function clampPercent(value) {
+      const n = Number(value) || 0;
+      return Math.max(0, Math.min(n, 100));
+    }
+
+    function updateDailySummary(amalanList, logData) {
+      const list = amalanList || [];
+      if (!list.length) {
+        document.getElementById('statAverage').textContent = '0%';
+        document.getElementById('statCompleted').textContent = '0 / 0';
+        document.getElementById('statTotal').textContent = '0';
+        updateHeroProgress(0);
+        return;
+      }
+
+      let totalPct = 0;
+      let complete = 0;
+      list.forEach(item => {
+        const pct = clampPercent(((Number(logData?.[item.amalan]) || 0) / Number(item.target || 1)) * 100);
+        totalPct += pct;
+        if (pct >= 100) complete++;
+      });
+      const avg = Math.round(totalPct / list.length);
+      document.getElementById('statAverage').textContent = avg + '%';
+      document.getElementById('statCompleted').textContent = `${complete} / ${list.length}`;
+      document.getElementById('statTotal').textContent = list.length;
+      updateHeroProgress(avg);
+    }
+
+    function updateHeroProgress(percent) {
+      const value = clampPercent(percent);
+      document.getElementById('heroProgressPercent').textContent = Math.round(value) + '%';
+      const circumference = 301.59;
+      document.getElementById('heroProgressRing').style.strokeDashoffset = circumference - (circumference * value / 100);
+    }
+
+    // ---------- TAB 1: HARIAN ----------
+    function loadTabHarian() {
+      document.getElementById('loaderHarian').style.display = 'block';
+      document.getElementById('listHarian').innerHTML = '';
+      document.getElementById('bulkActionContainer').style.display = 'none';
+      const tanggal = document.getElementById('tanggalLog').value;
+      setHeroDate(tanggal);
+
+      google.script.run.withSuccessHandler(function(amalanList) {
+        globalAmalan = amalanList || [];
+        google.script.run.withSuccessHandler(function(logData) {
+          document.getElementById('loaderHarian').style.display = 'none';
+          updateDailySummary(globalAmalan, logData || {});
+          renderListHarian(globalAmalan, logData || {});
+        }).withFailureHandler(err => handleError(err, 'loaderHarian')).getLogByDate(tanggal);
+      }).withFailureHandler(err => handleError(err, 'loaderHarian')).getAmalan();
+    }
+
+    function renderListHarian(amalanList, logData) {
+      const container = document.getElementById('listHarian');
+      if (!amalanList.length) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-bullseye"></i></div>
+            <div class="empty-title">Belum ada target amalan</div>
+            <p class="empty-copy">Atur kebiasaan yang ingin kamu jaga melalui tab Target.</p>
+          </div>`;
+        return;
+      }
+
+      document.getElementById('bulkActionContainer').style.display = 'block';
+      let html = '';
+      amalanList.forEach((item, index) => {
+        const capaian = Number(logData[item.amalan] || 0);
+        const target = Number(item.target || 1);
+        const persentase = clampPercent((capaian / target) * 100);
+        const complete = persentase >= 100;
+        const tone = complete ? '' : (persentase >= 60 ? 'warn' : 'low');
+        html += `
+          <div class="habit-item ${complete ? 'is-complete' : ''}">
+            <div class="habit-top">
+              <div class="habit-info">
+                <div class="habit-icon"><i class="bi ${complete ? 'bi-check2' : 'bi-sparkles'}"></i></div>
+                <div>
+                  <div class="habit-name">${escapeHtml(item.amalan)}</div>
+                  <div class="habit-meta">Target ${target} ${escapeHtml(item.satuan || '')}</div>
+                </div>
+              </div>
+              <div class="habit-input-wrap">
+                <input type="number" id="capaian_${index}" class="habit-input" value="${capaian}" min="0" oninput="updateUIProgress(${index}, ${target})">
+                <span class="habit-unit">/ ${target}<br>${escapeHtml(item.satuan || '')}</span>
+                <button class="quick-full" onclick="setFullCapaian(${index}, ${target})" title="Tandai 100%" aria-label="Tandai 100%"><i class="bi bi-check-lg"></i></button>
+              </div>
+            </div>
+            <div class="habit-progress-row">
+              <div class="habit-progress"><div id="bar_${index}" class="habit-progress-bar ${tone}" style="width:${persentase}%"></div></div>
+              <div id="pct_${index}" class="habit-percent">${Math.round(persentase)}%</div>
+            </div>
+          </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[ch]));
+    }
+
+    function setFullCapaian(index, target) {
+      document.getElementById(`capaian_${index}`).value = target;
+      updateUIProgress(index, target);
+    }
+
+    function checkSemuaAmalan() {
+      if (!globalAmalan.length) return;
+      globalAmalan.forEach((item, index) => setFullCapaian(index, item.target));
+      updateDailySummary(globalAmalan, getCurrentLogDataFromInputs());
+      Swal.fire({ icon:'success', title:'Masya Allah!', text:`Semua target ${USER_NAME} sudah diisi 100%. Jangan lupa simpan.`, timer:2200, showConfirmButton:false });
+    }
+
+    function getCurrentLogDataFromInputs() {
+      const data = {};
+      globalAmalan.forEach((item, index) => data[item.amalan] = Number(document.getElementById(`capaian_${index}`)?.value || 0));
+      return data;
+    }
+
+    function updateUIProgress(index, target) {
+      const input = document.getElementById(`capaian_${index}`);
+      const val = Math.max(0, Number(input?.value || 0));
+      const pct = clampPercent((val / Number(target || 1)) * 100);
+      const bar = document.getElementById(`bar_${index}`);
+      const label = document.getElementById(`pct_${index}`);
+      if (!bar) return;
+      bar.style.width = pct + '%';
+      bar.className = 'habit-progress-bar' + (pct >= 100 ? '' : (pct >= 60 ? ' warn' : ' low'));
+      if (label) label.textContent = Math.round(pct) + '%';
+      const item = input.closest('.habit-item');
+      if (item) item.classList.toggle('is-complete', pct >= 100);
+      updateDailySummary(globalAmalan, getCurrentLogDataFromInputs());
+    }
+
+    function simpanLogHarian() {
+      const tanggal = document.getElementById('tanggalLog').value;
+      if (!tanggal) return Swal.fire({ icon:'warning', title:'Tanggal belum dipilih', text:'Pilih tanggal terlebih dahulu.', confirmButtonColor:'#103d30' });
+      let logs = [];
+      globalAmalan.forEach((item, index) => {
+        const input = document.getElementById(`capaian_${index}`);
+        const val = input?.value;
+        if (val !== '') logs.push({ amalan:item.amalan, target:item.target, capaian:parseFloat(val) });
+      });
+      showLoading('Menyimpan catatan…');
+      google.script.run.withSuccessHandler(res => {
+        Swal.fire({ icon:'success', title:'Alhamdulillah!', text:res, timer:1900, showConfirmButton:false });
+      }).withFailureHandler(err => handleError(err)).saveLogHarian(tanggal, logs);
+    }
+
+    // ---------- TAB 2: RIWAYAT ----------
+    function loadTabRiwayat() {
+      document.getElementById('loaderRiwayat').style.display = 'block';
+      document.getElementById('tableRiwayat').innerHTML = '';
+      document.getElementById('paginationControls').innerHTML = '';
+      const filterDate = document.getElementById('filterRiwayat').value;
+      google.script.run.withSuccessHandler(res => {
+        document.getElementById('loaderRiwayat').style.display = 'none';
+        riwayatData = res || [];
+        currentPage = 1;
+        renderRiwayatPage();
+      }).withFailureHandler(err => handleError(err, 'loaderRiwayat')).getRiwayat(filterDate);
+    }
+
+    function renderRiwayatPage() {
+      const tbody = document.getElementById('tableRiwayat');
+      if (!riwayatData.length) {
+        tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state" style="margin:8px 0"><div class="empty-icon"><i class="bi bi-clock-history"></i></div><div class="empty-title">Belum ada riwayat</div><p class="empty-copy">Catatan yang kamu simpan akan muncul di sini.</p></div></td></tr>`;
+        document.getElementById('paginationControls').innerHTML = '';
+        return;
+      }
+      const start = (currentPage - 1) * itemsPerPage;
+      const paginatedItems = riwayatData.slice(start, start + itemsPerPage);
+      let html = '';
+      paginatedItems.forEach(item => {
+        html += `<tr>
+          <td class="text-nowrap fw-semibold">${escapeHtml(item.tanggal)}</td>
+          <td><strong>${escapeHtml(item.amalan)}</strong></td>
+          <td><span class="status-badge"><i class="bi bi-check2-circle"></i>${escapeHtml(item.capaian)} / ${escapeHtml(item.target)}</span></td>
+          <td class="text-end text-nowrap">
+            <button class="action-icon me-1" onclick="editRiwayat(${item.rowIndex}, '${jsEscape(item.amalan)}', ${Number(item.capaian)}, ${Number(item.target)})" title="Edit"><i class="bi bi-pencil-fill"></i></button>
+            <button class="action-icon danger" onclick="hapusRiwayat(${item.rowIndex})" title="Hapus"><i class="bi bi-trash3-fill"></i></button>
+          </td>
+        </tr>`;
+      });
+      tbody.innerHTML = html;
+      renderPaginationControls();
+    }
+
+    function jsEscape(value) { return String(value ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+    function renderPaginationControls() {
+      const totalPages = Math.ceil(riwayatData.length / itemsPerPage);
+      if (totalPages <= 1) { document.getElementById('paginationControls').innerHTML=''; return; }
+      let pageHtml = `<li class="page-item ${currentPage===1?'disabled':''}"><button class="page-link" onclick="changePage(-1)"><i class="bi bi-chevron-left"></i></button></li>`;
+      for (let i=1; i<=totalPages; i++) pageHtml += `<li class="page-item ${currentPage===i?'active':''}"><button class="page-link" onclick="goToPage(${i})">${i}</button></li>`;
+      pageHtml += `<li class="page-item ${currentPage===totalPages?'disabled':''}"><button class="page-link" onclick="changePage(1)"><i class="bi bi-chevron-right"></i></button></li>`;
+      document.getElementById('paginationControls').innerHTML = pageHtml;
+    }
+
+    function changePage(dir) { const max=Math.ceil(riwayatData.length/itemsPerPage); currentPage=Math.min(Math.max(1,currentPage+dir),max); renderRiwayatPage(); }
+    function goToPage(page) { currentPage=page; renderRiwayatPage(); }
+
+    function hapusRiwayat(rowIndex) {
+      Swal.fire({ title:'Hapus catatan ini?', text:'Data yang dihapus tidak dapat dikembalikan.', icon:'warning', showCancelButton:true, confirmButtonColor:'#a9574f', cancelButtonColor:'#6f7d76', confirmButtonText:'Hapus catatan', cancelButtonText:'Batal' }).then(result => {
+        if (result.isConfirmed) {
+          showLoading('Menghapus…');
+          google.script.run.withSuccessHandler(res => { Swal.fire({ icon:'success', title:'Terhapus', text:res, timer:1600, showConfirmButton:false }); loadTabRiwayat(); }).withFailureHandler(err => handleError(err)).deleteRiwayat(rowIndex);
+        }
+      });
+    }
+
+    function editRiwayat(rowIndex, amalan, oldCapaian, target) {
+      Swal.fire({
+        title:'Revisi catatan',
+        html:`<div style="text-align:left"><div style="font-size:.8rem;color:#71817a;margin-bottom:6px">${escapeHtml(amalan)}</div><div style="font-size:.76rem;color:#71817a;margin-bottom:10px">Target: ${target}</div></div>`,
+        input:'number', inputValue:oldCapaian, inputAttributes:{min:0,step:'any'}, showCancelButton:true, confirmButtonText:'Simpan revisi', cancelButtonText:'Batal', confirmButtonColor:'#103d30'
+      }).then(result => {
+        if (result.isConfirmed) {
+          showLoading('Memperbarui…');
+          google.script.run.withSuccessHandler(res => { Swal.fire({ icon:'success', title:'Tersimpan', text:res, timer:1600, showConfirmButton:false }); loadTabRiwayat(); }).withFailureHandler(err => handleError(err)).editRiwayatLog(rowIndex, result.value);
+        }
+      });
+    }
+
+    // ---------- TAB 3: TARGET ----------
+    function loadTabTarget() {
+      document.getElementById('loaderTarget').style.display='block';
+      document.getElementById('tableTarget').innerHTML='';
+      google.script.run.withSuccessHandler(res => {
+        document.getElementById('loaderTarget').style.display='none';
+        if (!res || !res.length) {
+          document.getElementById('tableTarget').innerHTML = `<tr><td colspan="5"><div class="empty-state" style="margin:8px 0"><div class="empty-icon"><i class="bi bi-bullseye"></i></div><div class="empty-title">Belum ada amalan aktif</div><p class="empty-copy">Tambahkan target pertama untuk mulai membangun ritme.</p></div></td></tr>`;
+          return;
+        }
+        let html='';
+        res.forEach(item => {
+          html += `<tr>
+            <td><div class="btn-group" role="group"><button class="action-icon" onclick="geserAmalan(${item.rowIndex},'up')"><i class="bi bi-chevron-up"></i></button><button class="action-icon" onclick="geserAmalan(${item.rowIndex},'down')"><i class="bi bi-chevron-down"></i></button></div></td>
+            <td class="text-start"><strong>${escapeHtml(item.amalan)}</strong></td>
+            <td>${escapeHtml(item.target)}</td>
+            <td><span class="status-badge">${escapeHtml(item.satuan || '-')}</span></td>
+            <td class="text-end text-nowrap"><button class="action-icon me-1" onclick="bukaEditAmalan(${item.rowIndex},'${jsEscape(item.amalan)}',${Number(item.target)},'${jsEscape(item.satuan || '')}')"><i class="bi bi-pencil-fill"></i></button><button class="action-icon danger" onclick="hapusAmalan(${item.rowIndex})"><i class="bi bi-trash3-fill"></i></button></td>
+          </tr>`;
+        });
+        document.getElementById('tableTarget').innerHTML=html;
+      }).withFailureHandler(err => handleError(err,'loaderTarget')).getAmalan();
+    }
+
+    function tambahAmalan() {
+      const a=document.getElementById('newAmalan').value.trim();
+      const t=document.getElementById('newTarget').value;
+      const s=document.getElementById('newSatuan').value.trim();
+      if (!a || !t || !s) return Swal.fire({ icon:'warning', title:'Data belum lengkap', text:'Isi nama amalan, target, dan satuannya.', confirmButtonColor:'#103d30' });
+      showLoading('Menyimpan target…');
+      google.script.run.withSuccessHandler(res => {
+        Swal.fire({ icon:'success', title:'Target ditambahkan', text:res, timer:1600, showConfirmButton:false });
+        document.getElementById('newAmalan').value=''; document.getElementById('newTarget').value=''; document.getElementById('newSatuan').value=''; loadTabTarget();
+      }).withFailureHandler(err => handleError(err)).saveAmalan(a,t,s);
+    }
+
+    function hapusAmalan(id) {
+      Swal.fire({ title:'Hapus target ini?', text:'Riwayat log lama tetap berada di sheet Log.', icon:'warning', showCancelButton:true, confirmButtonColor:'#a9574f', cancelButtonColor:'#6f7d76', confirmButtonText:'Hapus', cancelButtonText:'Batal' }).then(result => {
+        if (result.isConfirmed) { showLoading('Menghapus…'); google.script.run.withSuccessHandler(res => { Swal.fire({icon:'success',title:'Terhapus',text:res,timer:1500,showConfirmButton:false}); loadTabTarget(); }).withFailureHandler(err => handleError(err)).deleteAmalan(id); }
+      });
+    }
+
+    function geserAmalan(rowIndex, arah) {
+      showLoading('Mengatur urutan…');
+      google.script.run.withSuccessHandler(() => { Swal.close(); loadTabTarget(); }).withFailureHandler(err => handleError(err)).moveAmalan(rowIndex,arah);
+    }
+
+    function bukaEditAmalan(rowIndex, amalan, target, satuan) {
+      Swal.fire({
+        title:'Edit target amalan',
+        html:`<div style="text-align:left"><label style="font-size:.72rem;font-weight:700;color:#71817a">NAMA AMALAN</label><input id="e-amalan" class="swal2-input" value="${escapeHtml(amalan)}"><label style="font-size:.72rem;font-weight:700;color:#71817a">TARGET</label><input id="e-target" type="number" class="swal2-input" value="${target}"><label style="font-size:.72rem;font-weight:700;color:#71817a">SATUAN</label><input id="e-satuan" class="swal2-input" value="${escapeHtml(satuan)}"></div>`,
+        focusConfirm:false, showCancelButton:true, confirmButtonText:'Simpan perubahan', cancelButtonText:'Batal', confirmButtonColor:'#103d30',
+        preConfirm:()=>[document.getElementById('e-amalan').value.trim(),document.getElementById('e-target').value,document.getElementById('e-satuan').value.trim()]
+      }).then(result=>{
+        if (result.isConfirmed) {
+          const vals=result.value; if(!vals[0]||!vals[1]||!vals[2]) return Swal.fire({icon:'error',title:'Data belum lengkap',text:'Semua kolom wajib diisi.',confirmButtonColor:'#103d30'});
+          showLoading('Memperbarui…');
+          google.script.run.withSuccessHandler(res=>{ Swal.fire({icon:'success',title:'Tersimpan',text:res,timer:1500,showConfirmButton:false}); loadTabTarget(); }).withFailureHandler(err=>handleError(err)).editAmalanRow(rowIndex,vals[0],vals[1],vals[2]);
+        }
+      });
+    }
+
+    // ---------- TAB 4: PROGRESS ----------
+    function getMotivasiCopywriting(dataArray, amalanName = '') {
+      if(!dataArray || !dataArray.length) return '';
+
+      const recent = dataArray.slice(-7).map(v => Number(v) || 0);
+      const avg = recent.reduce((a,b) => a + b, 0) / recent.length;
+      const latest = recent[recent.length - 1] ?? 0;
+
+      let msg = '';
+      let icon = 'bi-stars';
+      let label = 'Catatan untukmu';
+
+      if (avg > 150) {
+        msg = amalanName
+          ? `Masya Allah, ${USER_NAME}. <strong>${escapeHtml(amalanName)}</strong> jauh melampaui target dengan sangat baik. Sesuaikan lagi targetmu dengan kebiasaan yang telah kamu capai ini ya!.`
+          : `Masya Allah, ${USER_NAME}. Capaianmu melampaui target. Alhamdulillah target amalanmu bisa ditingkatkan lagi nih!.`;
+        icon = 'bi-stars';
+        label = 'Melampaui target';
+      } else if (avg > 100) {
+        msg = amalanName
+          ? `Alhamdulillah, ${USER_NAME}. <strong>${escapeHtml(amalanName)}</strong> konsisten di atas target. Pertahankan kebiasaan baik ini dengan stabil.`
+          : `Alhamdulillah, ${USER_NAME}. Capaianmu konsisten di atas target. Tidak lain karena pertolongan Allah.`;
+        icon = 'bi-graph-up-arrow';
+        label = 'Di atas target';
+      } else if (avg > 99) {
+        msg = amalanName
+          ? `Alhamdulillah, ${USER_NAME}. <strong>${escapeHtml(amalanName)}</strong> telah mencapai target. Pertahankan kebiasaan baik ini ya!.`
+          : `Alhamdulillah, ${USER_NAME}. Capaianmu telah mencapai target. Tidak lain karena pertolongan Allah.`;
+        icon = 'bi-graph-up-arrow';
+        label = 'Target tercapai';  
+      } else if (avg >= 90) {
+        msg = amalanName
+          ? `Alhamdulillah, ${USER_NAME}. <strong>${escapeHtml(amalanName)}</strong> sudah sangat dekat dengan target. Semoga Allah mudahkan untuk istiqomah.`
+          : `Alhamdulillah, ${USER_NAME}. Konsistensimu sudah kuat. Pertahankan kebiasaan ini agar istiqomah ya!`;
+        icon = 'bi-flower1';
+        label = 'Sangat baik';
+      } else if (avg >= 60) {
+        msg = amalanName
+          ? `${USER_NAME}, <strong>${escapeHtml(amalanName)}</strong> masih bisa ditingkatkan. Bismillah, semoga Allah mudahkan ya!`
+          : `Bismillah, ${USER_NAME}. Semoga Allah mudahkan untuk mencapai target ya!.`;
+        icon = 'bi-graph-up-arrow';
+        label = 'Perlu ditingkatkan';
+      } else {
+        msg = amalanName
+          ? `${USER_NAME}, <strong>${escapeHtml(amalanName)}</strong> perlu evaluasi. Sesuaikan target dan mulai dari target yang lebih realistis.`
+          : `Tidak apa-apa memulai lagi, ${USER_NAME}. Evaluasi targetmu dan pilih amalan yang terasa paling ringan untuk besok.`;
+        icon = 'bi-heart-half';
+        label = 'Perlu evaluasi';
+      }
+
+      return `
+        <div class="insight-card">
+          <div class="d-flex align-items-start gap-12">
+            <div class="lead-icon me-2"><i class="bi ${icon}"></i></div>
+            <div class="flex-grow-1">
+              <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:4px;">
+                <div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.12em;color:#71817a;font-weight:700;">${label}</div>
+                ${amalanName ? `<div style="font-size:.68rem;color:#7b8b84;font-weight:600;">Rata-rata 7 hari ${avg.toFixed(0)}%</div>` : ''}
+              </div>
+              <div style="font-weight:600;font-size:.87rem;line-height:1.55">${msg}</div>
+              ${amalanName ? `<div style="margin-top:7px;font-size:.72rem;color:#7b8b84;">Capaian terbaru: ${Number(latest).toFixed(0)}%</div>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function getSmartScale(dataArray, step = 20) {
+      const values = (dataArray || []).map(Number).filter(v => Number.isFinite(v));
+      const maxValue = values.length ? Math.max(...values) : 100;
+
+      // 100% tetap menjadi batas normal. Di atas 100%, sumbu Y
+      // otomatis bertambah agar titik 200%, 300%, dst tetap terlihat.
+      if (maxValue <= 100) return { max: 100, stepSize: 20 };
+
+      const padded = maxValue * 1.10;
+      const dynamicMax = Math.ceil(padded / step) * step;
+
+      return {
+        max: Math.max(120, dynamicMax),
+        stepSize: step
+      };
+    }
+
+    function makeChartOptions(dataArray) {
+      const scale = getSmartScale(dataArray);
+
+      return {
+        responsive:true,
+        maintainAspectRatio:false,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{display:false},
+          tooltip:{
+            callbacks:{
+              label:ctx => `${Number(ctx.parsed.y).toFixed(1)}%`
+            }
+          }
+        },
+        scales:{
+          x:{
+            grid:{display:false},
+            ticks:{color:'#819087',font:{size:10}}
+          },
+          y:{
+            beginAtZero:true,
+            suggestedMax:scale.max,
+            max:scale.max,
+            grid:{color:'#edf2ef'},
+            ticks:{
+              color:'#819087',
+              font:{size:10},
+              stepSize:scale.stepSize,
+              callback:v => v + '%'
+            }
+          }
+        }
+      };
+    }
+
+    function loadTabProgress() {
+      document.getElementById('loaderProgress').style.display='block';
+      chartInstances.forEach(chart=>chart.destroy()); chartInstances=[];
+      document.getElementById('chartsContainer').innerHTML=''; document.getElementById('motivasiOverall').innerHTML='';
+      google.script.run.withSuccessHandler(data=>{
+        document.getElementById('loaderProgress').style.display='none';
+        if(!data || !data.dates || data.dates.length===0){ document.getElementById('chartsContainer').innerHTML='<div class="empty-state"><div class="empty-icon"><i class="bi bi-graph-up"></i></div><div class="empty-title">Belum ada data progres</div><p class="empty-copy">Simpan catatan harian beberapa hari untuk mulai melihat polanya.</p></div>'; return; }
+        renderCharts(data);
+      }).withFailureHandler(err=>handleError(err,'loaderProgress')).getProgressData();
+    }
+
+    function renderCharts(data) {
+      const labels = data.dates;
+      const overallData = labels.map(tgl => {
+        const d = data.overall[tgl];
+        return d ? (d.sum / d.count) : 0;
+      });
+
+      document.getElementById('motivasiOverall').innerHTML = getMotivasiCopywriting(overallData);
+
+      const ctxOverall = document.getElementById('chartOverall').getContext('2d');
+      chartInstances.push(new Chart(ctxOverall, {
+        type:'line',
+        data:{
+          labels,
+          datasets:[{
+            label:'Rata-rata',
+            data:overallData,
+            borderColor:'#1d6a50',
+            backgroundColor:'rgba(29,106,80,.10)',
+            fill:true,
+            tension:.35,
+            borderWidth:3,
+            pointRadius:3,
+            pointHoverRadius:5,
+            pointBackgroundColor:'#caa44c'
+          }]
+        },
+        options:makeChartOptions(overallData)
+      }));
+
+      const container = document.getElementById('chartsContainer');
+      const colorList = ['#1d6a50','#caa44c','#5d8f79','#7f9e91','#4f7f6d','#b18a3e'];
+      let colorIndex = 0;
+
+      for (const amalan in data.amalan) {
+        // Nilai >100% sengaja tidak di-clamp agar 200%, 300%, dst tetap terbaca.
+        const amalanData = labels.map(tgl => Number(data.amalan[amalan][tgl] ?? 0));
+
+        const col = document.createElement('div');
+        col.className = 'col-md-6';
+
+        const canvasId = 'chart_' + amalan.replace(/[^a-zA-Z0-9]/g,'') + '_' + colorIndex;
+        const motivation = getMotivasiCopywriting(amalanData, amalan);
+
+        col.innerHTML = `
+          <div class="chart-card h-100">
+            <div class="chart-title">${escapeHtml(amalan)}</div>
+            <div style="margin-bottom:12px;">${motivation}</div>
+            <div class="chart-wrap"><canvas id="${canvasId}"></canvas></div>
+          </div>`;
+
+        container.appendChild(col);
+
+        const ctx = document.getElementById(canvasId).getContext('2d');
+        const stroke = colorList[colorIndex % colorList.length];
+
+        chartInstances.push(new Chart(ctx, {
+          type:'line',
+          data:{
+            labels,
+            datasets:[{
+              label:'Capaian',
+              data:amalanData,
+              borderColor:stroke,
+              backgroundColor:stroke+'18',
+              fill:true,
+              tension:.35,
+              borderWidth:2.5,
+              pointRadius:3,
+              pointHoverRadius:5,
+              pointBackgroundColor:'#caa44c'
+            }]
+          },
+          options:makeChartOptions(amalanData)
+        }));
+
+        colorIndex++;
+      }
+    }
+
+    // ---------- RAMADAN REMINDER ----------
+    function showRamadanCountdown() {
+      // Target Ramadan sesuai permintaan: 8 Februari 2026 (WIB)
+      const targetDate = new Date('2026-02-08T00:00:00+07:00');
+      const now = new Date();
+
+      // Setelah masuk Ramadan, popup tidak akan muncul lagi.
+      if (now >= targetDate) return;
+
+      let countdownTimer = null;
+
+      function renderCountdown() {
+        const current = new Date();
+        const distance = targetDate - current;
+
+        if (distance <= 0) {
+          if (countdownTimer) clearInterval(countdownTimer);
+          Swal.close();
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        const setValue = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = String(value).padStart(2, '0');
+        };
+
+        setValue('ramadanDays', days);
+        setValue('ramadanHours', hours);
+        setValue('ramadanMinutes', minutes);
+        setValue('ramadanSeconds', seconds);
+      }
+
+      Swal.fire({
+        html: `
+          <div style="padding:8px 6px 2px;font-family:'DM Sans',sans-serif;">
+            <div style="width:70px;height:70px;margin:0 auto 15px;border-radius:21px;display:grid;place-items:center;background:linear-gradient(145deg,#1d6a50,#0c2f25);color:#caa44c;box-shadow:0 12px 28px rgba(16,61,48,.18);font-size:28px;">
+              <i class="bi bi-moon-stars-fill"></i>
+            </div>
+
+            <div style="font-size:.67rem;text-transform:uppercase;letter-spacing:.16em;font-weight:700;color:#1d6a50;margin-bottom:6px;">Persiapan Ramadan</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.85rem;line-height:1.1;font-weight:700;color:#103d30;margin-bottom:8px;">Menuju Ramadan 🌙</div>
+            <div style="font-size:.84rem;line-height:1.7;color:#71817a;max-width:430px;margin:0 auto 20px;">
+              Yuk siapkan hati, waktu, dan kebiasaan baik kita. Sedikit demi sedikit, semoga Allah mudahkan kita menyambut Ramadan dengan lebih siap.
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:430px;margin:0 auto 18px;">
+              <div style="padding:12px 5px;border:1px solid #e7eee9;border-radius:14px;background:#f8fbf9;">
+                <div id="ramadanDays" style="font-size:1.35rem;font-weight:700;color:#103d30;">00</div>
+                <div style="font-size:.62rem;color:#71817a;letter-spacing:.08em;margin-top:2px;">HARI</div>
+              </div>
+              <div style="padding:12px 5px;border:1px solid #e7eee9;border-radius:14px;background:#f8fbf9;">
+                <div id="ramadanHours" style="font-size:1.35rem;font-weight:700;color:#103d30;">00</div>
+                <div style="font-size:.62rem;color:#71817a;letter-spacing:.08em;margin-top:2px;">JAM</div>
+              </div>
+              <div style="padding:12px 5px;border:1px solid #e7eee9;border-radius:14px;background:#f8fbf9;">
+                <div id="ramadanMinutes" style="font-size:1.35rem;font-weight:700;color:#103d30;">00</div>
+                <div style="font-size:.62rem;color:#71817a;letter-spacing:.08em;margin-top:2px;">MENIT</div>
+              </div>
+              <div style="padding:12px 5px;border:1px solid #f6efdc;border-radius:14px;background:#fffaf0;">
+                <div id="ramadanSeconds" style="font-size:1.35rem;font-weight:700;color:#caa44c;">00</div>
+                <div style="font-size:.62rem;color:#8f7738;letter-spacing:.08em;margin-top:2px;">DETIK</div>
+              </div>
+            </div>
+
+            <div style="font-size:.72rem;color:#94a29b;line-height:1.6;">“Satu langkah kecil setiap hari.”</div>
+          </div>
+        `,
+        width:'520px',
+        showConfirmButton:true,
+        confirmButtonText:'Bismillah, Persiapkan Diri',
+        confirmButtonColor:'#103d30',
+        allowOutsideClick:true,
+        allowEscapeKey:true,
+        customClass:{
+          popup:'ramadan-countdown-popup'
+        }
+      });
+
+      renderCountdown();
+      countdownTimer = setInterval(renderCountdown, 1000);
+    }
+
+    // ---------- INIT ----------
+    window.addEventListener('load',()=>{
+      setHeroDate(document.getElementById('tanggalLog').value);
+      loadTabHarian();
+      showRamadanCountdown();
+    });
   </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
