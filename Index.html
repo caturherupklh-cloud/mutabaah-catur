@@ -1,1 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Yaumi — dashboard mutaba'ah harian untuk membantu menjaga konsistensi ibadah, mengevaluasi progres, dan membangun kebiasaan baik setiap hari.">
+<meta name="theme-color" content="#0b4b36">
+<title>Yaumi — Bangun Kebiasaan Baik, Satu Hari Sekaligus</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+:root{
+  --green-950:#073323;--green-900:#0b4b36;--green-800:#0f6647;--green-700:#18815b;
+  --green-100:#e8f4ee;--cream:#fbfaf6;--paper:#fff;--ink:#17231e;--muted:#6d7a74;
+  --gold:#caa44c;--gold-soft:#f5ead0;--line:#e6ece8;
+  --shadow:0 22px 60px rgba(8,51,35,.09);
+}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);background:radial-gradient(circle at 85% 10%,rgba(202,164,76,.11),transparent 22%),radial-gradient(circle at 5% 28%,rgba(24,129,91,.08),transparent 24%),var(--cream);font-family:"DM Sans",sans-serif;overflow-x:hidden}
+h1,h2,h3,h4,h5{font-family:"Plus Jakarta Sans",sans-serif}
+a{text-decoration:none}.container-xl{max-width:1200px}
+
+.nav-shell{position:sticky;top:0;z-index:1000;backdrop-filter:blur(18px);background:rgba(251,250,246,.84);border-bottom:1px solid rgba(230,236,232,.8)}
+.navbar{padding:15px 0}
+.brand{display:inline-flex;align-items:center;gap:10px;color:var(--green-950);font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:1.1rem}
+.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,var(--green-900),var(--green-700));box-shadow:0 8px 22px rgba(11,75,54,.2)}
+.nav-link{color:#516059!important;font-weight:600;margin:0 3px;border-radius:12px;padding:9px 12px!important}
+.nav-link:hover{background:#eef5f1;color:var(--green-900)!important}
+.btn-nav{background:var(--green-900);color:#fff;padding:11px 17px;border-radius:13px;font-weight:700;box-shadow:0 10px 24px rgba(11,75,54,.16)}
+.btn-nav:hover{color:#fff;transform:translateY(-1px)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;color:var(--green-900);background:var(--green-100);font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.11em}
+.section-title{font-size:clamp(2rem,4vw,3rem);line-height:1.08;letter-spacing:-.045em;color:var(--green-950)}
+.section-copy{color:var(--muted);font-size:1.04rem;line-height:1.75}
+.btn-primary{background:var(--green-900);border-color:var(--green-900);color:#fff;border-radius:14px;padding:14px 20px;font-weight:800;box-shadow:0 14px 28px rgba(11,75,54,.19)}
+.btn-primary:hover{background:var(--green-950);border-color:var(--green-950);color:#fff;transform:translateY(-2px)}
+.btn-gold{background:linear-gradient(135deg,#d7b55e,#caa44c);color:#fff;border:0;border-radius:14px;padding:14px 20px;font-weight:800;box-shadow:0 14px 28px rgba(202,164,76,.25)}
+.btn-gold:hover{color:#fff;transform:translateY(-2px)}
+
+.hero{position:relative;padding:80px 0 50px}
+.hero h1{margin:20px 0;font-size:clamp(2.6rem,6vw,4.8rem);line-height:.98;letter-spacing:-.065em;color:var(--green-950)}
+.hero h1 .accent{color:var(--green-700);position:relative}
+.hero h1 .accent:after{content:"";position:absolute;left:0;right:10%;bottom:-5px;height:8px;background:var(--gold-soft);border-radius:999px;z-index:-1}
+.hero-copy{max-width:680px;color:#65746d;font-size:1.08rem;line-height:1.8}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.trust-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+.trust-chip{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);padding:9px 12px;border-radius:999px;color:#52615a;font-weight:700;font-size:.82rem}
+.trust-chip i{color:var(--green-700)}
+
+.hero-visual{position:relative;min-height:540px}
+.hero-glow{position:absolute;right:3%;top:5%;width:370px;height:370px;background:radial-gradient(circle,rgba(202,164,76,.26),rgba(202,164,76,0) 68%);filter:blur(6px)}
+.dashboard-window{position:absolute;right:0;top:15px;width:min(600px,100%);border-radius:26px;background:#fff;border:1px solid rgba(226,235,229,.9);box-shadow:0 34px 80px rgba(10,66,46,.16);overflow:hidden;transform:rotate(1deg)}
+.window-bar{display:flex;align-items:center;gap:7px;padding:12px 15px;background:#f8faf9;border-bottom:1px solid var(--line)}
+.window-dot{width:8px;height:8px;border-radius:50%;background:#d4dcd7}.window-label{margin-left:4px;color:#819087;font-size:.7rem;font-weight:700}
+.dash-shell{padding:20px;background:linear-gradient(180deg,#fdfefd 0%,#f5f9f7 100%)}
+.dash-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.dash-mini-title{font-family:"Plus Jakarta Sans",sans-serif;font-size:.85rem;font-weight:800;color:var(--green-950)}
+.dash-mini-date{font-size:.65rem;color:#7b8c84;background:#fff;border:1px solid var(--line);border-radius:10px;padding:6px 9px;font-weight:700}
+.dash-progress-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px;border-radius:18px;background:#fff;border:1px solid var(--line);margin-bottom:14px}
+.ring{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green-700) 0deg 282deg,#e9efeb 282deg 360deg);position:relative;flex:none}
+.ring:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff}.ring span{position:relative;z-index:1;font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:1rem;color:var(--green-950)}
+.dash-stats{flex:1;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.mini-stat{padding:11px 12px;border-radius:14px;background:#f7faf8;border:1px solid #edf2ef}.mini-stat small{display:block;color:#8a9791;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}.mini-stat strong{display:block;margin-top:4px;color:var(--green-950);font-size:1.05rem}
+.habit-list{display:grid;gap:9px}.habit-item{display:flex;align-items:center;gap:10px;padding:11px 12px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.habit-check{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:#dff2e8;color:var(--green-800);font-size:.75rem;flex:none}
+.habit-item strong{font-size:.74rem;color:#33433c}.habit-bar{height:6px;background:#edf2ef;border-radius:999px;overflow:hidden;margin-top:5px}.habit-bar span{display:block;height:100%;background:linear-gradient(90deg,var(--green-700),#63a989);border-radius:999px}.habit-meta{margin-left:auto;color:#7b8b84;font-size:.68rem;font-weight:800}
+.float-card{position:absolute;left:-22px;bottom:46px;padding:14px 15px;width:190px;background:#fff;border:1px solid var(--line);border-radius:17px;box-shadow:0 18px 40px rgba(10,66,46,.14);transform:rotate(-3deg)}
+.float-card .label{font-size:.64rem;color:#8a9791;text-transform:uppercase;letter-spacing:.08em;font-weight:800}.float-card strong{display:block;color:var(--green-950);margin-top:4px}.float-card p{margin:4px 0 0;color:#76857e;font-size:.72rem;line-height:1.45}
+
+.proof-strip{margin-top:20px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.proof-flex{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}.proof-label{font-size:.73rem;text-transform:uppercase;letter-spacing:.12em;color:#8a9791;font-weight:800}.proof-items{display:flex;flex-wrap:wrap;gap:10px}.proof-item{font-size:.79rem;font-weight:800;color:#5b6a63;display:inline-flex;align-items:center;gap:8px}
+
+.section{padding:92px 0}.problem-card,.solution-card{padding:28px;border-radius:22px;border:1px solid var(--line);background:#fff;height:100%;box-shadow:0 12px 34px rgba(11,75,54,.05)}
+.solution-card{background:linear-gradient(180deg,#f7fbf8,#fff)}
+.list-clean{list-style:none;padding:0;margin:22px 0 0}.list-clean li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px dashed #e7ece9;color:#5f6e67;line-height:1.6}.list-clean li:last-child{border-bottom:0}.list-clean i{color:var(--green-700);margin-top:3px}
+.quote{margin-top:26px;padding:16px 18px;background:var(--gold-soft);border-radius:15px;color:#6a5730;font-size:.92rem;line-height:1.65;font-weight:600}
+
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.feature-card{padding:24px;border-radius:20px;background:#fff;border:1px solid var(--line);transition:.25s ease;height:100%}.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.feature-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:var(--green-100);color:var(--green-900);font-size:1.15rem;margin-bottom:16px}
+.feature-card h3{font-size:1rem;margin-bottom:8px;color:var(--green-950)}.feature-card p{font-size:.88rem;line-height:1.65;color:#718079;margin:0}
+
+.demo-shell{background:linear-gradient(135deg,var(--green-950),#0d5a40);border-radius:32px;padding:34px;overflow:hidden;position:relative;box-shadow:0 30px 80px rgba(7,51,35,.17)}
+.demo-shell:after{content:"";position:absolute;right:-60px;top:-80px;width:320px;height:320px;border-radius:50%;border:1px solid rgba(255,255,255,.11);box-shadow:0 0 0 40px rgba(255,255,255,.025),0 0 0 80px rgba(255,255,255,.018)}
+.demo-copy{position:relative;z-index:2}.demo-copy h2{color:#fff}.demo-copy p{color:rgba(255,255,255,.74)}
+.demo-bullets{list-style:none;padding:0;margin:25px 0 0}.demo-bullets li{display:flex;gap:10px;color:rgba(255,255,255,.84);padding:8px 0;font-size:.9rem}.demo-bullets i{color:#d6e5a8;margin-top:2px}
+.phone-wrap{position:relative;z-index:2}.phone{width:min(330px,100%);aspect-ratio:9/16;margin:0 auto;border:9px solid #1b2923;border-radius:34px;background:#fff;box-shadow:0 26px 50px rgba(0,0,0,.32);overflow:hidden;position:relative}.phone:before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:100px;height:22px;background:#1b2923;border-bottom-left-radius:14px;border-bottom-right-radius:14px;z-index:4}.phone iframe{width:100%;height:100%;border:0}
+
+.habit-loop{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:35px}.loop-card{padding:21px;border:1px solid var(--line);border-radius:18px;background:#fff;position:relative}.loop-num{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--green-100);color:var(--green-900);font-weight:800;font-size:.8rem;margin-bottom:13px}.loop-card h3{font-size:.92rem;color:var(--green-950);margin-bottom:7px}.loop-card p{font-size:.81rem;line-height:1.6;color:#74827c;margin:0}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.step{padding:24px;background:#fff;border:1px solid var(--line);border-radius:20px}.step-number{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:var(--green-900);color:#fff;font-weight:800;margin-bottom:17px}.step h3{font-size:1rem;color:var(--green-950)}.step p{margin:0;color:#74827c;font-size:.86rem;line-height:1.7}.tiny-note{font-size:.75rem;line-height:1.65;color:#89958f}
+
+.faq .accordion-item{border:1px solid var(--line);border-radius:16px!important;overflow:hidden;margin-bottom:10px;background:#fff}.faq .accordion-button{font-weight:700;color:var(--green-950);padding:17px 18px;box-shadow:none}.faq .accordion-button:not(.collapsed){background:#f8fbf9;color:var(--green-900)}.faq .accordion-body{color:#708078;line-height:1.75;font-size:.9rem}
+.cta{padding:78px 0 92px}.cta-shell{background:linear-gradient(135deg,#f1f7f3,#fff);border:1px solid #dbe8e1;border-radius:30px;padding:44px;text-align:center;position:relative;overflow:hidden}.cta-shell:before,.cta-shell:after{content:"";position:absolute;border-radius:50%;pointer-events:none}.cta-shell:before{width:220px;height:220px;left:-90px;top:-90px;background:rgba(24,129,91,.08)}.cta-shell:after{width:240px;height:240px;right:-100px;bottom:-120px;background:rgba(202,164,76,.09)}
+footer{background:var(--green-950);color:rgba(255,255,255,.66);padding:36px 0}.footer-brand{color:#fff;font-family:"Plus Jakarta Sans",sans-serif;font-weight:800}.footer-link{color:rgba(255,255,255,.66)}.footer-link:hover{color:#fff}
+.wa{position:fixed;right:22px;bottom:22px;z-index:1200;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;color:#fff;background:#25d366;font-size:1.35rem;box-shadow:0 15px 34px rgba(37,211,102,.28)}.wa:hover{color:#fff;transform:translateY(-2px)}
+
+
+/* Tutorial / duplication guide — original content, refreshed visual system */
+.tutorial-section{
+  padding:84px 0 92px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(24,129,91,.06), transparent 25%),
+    linear-gradient(180deg,#f0f5f2 0%,#f8faf8 100%);
+  border-top:1px solid #e4ebe7;
+  border-bottom:1px solid #e4ebe7;
+}
+.tutorial-container{
+  width:min(900px, calc(100% - 32px));
+  margin:0 auto;
+}
+.tutorial-section .text-center.mb-5 h2{
+  color:var(--green-950)!important;
+  font-size:clamp(2rem,4vw,2.8rem);
+  letter-spacing:-.045em;
+  margin-bottom:10px!important;
+}
+.tutorial-section .text-center.mb-5 p{
+  color:#72817a!important;
+  font-size:1rem!important;
+}
+.tutorial-section .step-card{
+  background:#fff;
+  border:1px solid #e0e9e4;
+  border-radius:24px;
+  padding:34px 34px 32px;
+  margin-bottom:24px;
+  box-shadow:0 16px 40px rgba(9,61,42,.065);
+  position:relative;
+  overflow:hidden;
+}
+.tutorial-section .step-card:after{
+  content:"";
+  position:absolute;
+  width:180px;height:180px;
+  right:-100px;top:-105px;
+  border-radius:50%;
+  background:rgba(24,129,91,.045);
+  pointer-events:none;
+}
+.tutorial-section .step-badge{
+  position:static;
+  display:inline-flex;
+  align-items:center;
+  margin:-34px 0 20px -34px;
+  padding:11px 22px;
+  border-radius:0 0 17px 0;
+  background:linear-gradient(135deg,var(--green-900),var(--green-700));
+  color:#fff;
+  font-weight:800;
+  font-size:.86rem;
+  box-shadow:0 10px 20px rgba(11,75,54,.12);
+}
+.tutorial-section .step-content{
+  margin-top:0;
+  position:relative;
+  z-index:1;
+}
+.tutorial-section .step-content h4{
+  color:var(--green-950)!important;
+  font-family:"Plus Jakarta Sans",sans-serif;
+  font-size:1.18rem;
+  letter-spacing:-.025em;
+}
+.tutorial-section .step-content p,
+.tutorial-section .step-content li{
+  color:#64736c!important;
+  line-height:1.75;
+  font-size:.92rem;
+}
+.tutorial-section .step-content a{color:var(--green-800)!important}
+.tutorial-section .code-box{
+  background:#17253a;
+  color:#f8fafc;
+  border:1px solid #263a55;
+  border-radius:18px;
+  padding:24px 20px 18px;
+  margin-top:12px;
+  position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 12px 26px rgba(11,25,43,.12);
+}
+.tutorial-section .code-box .btn-copy{
+  position:absolute;
+  right:12px;
+  top:12px;
+  border:0;
+  border-radius:10px;
+  padding:7px 12px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font-weight:800;
+  font-size:.73rem;
+}
+.tutorial-section .code-box .btn-copy:hover{background:var(--gold);color:#fff}
+.tutorial-section .code-box span.text-muted{color:#9fb1c5!important}
+.tutorial-section .code-box code.text-warning{color:#f3c65a!important;word-break:break-all}
+.tutorial-section .code-box pre{
+  max-height:440px;
+  overflow:auto;
+  border-radius:12px;
+  scrollbar-width:thin;
+}
+.tutorial-section .alert{
+  border-radius:16px!important;
+  line-height:1.65;
+  font-size:.87rem;
+}
+.tutorial-section .alert-warning{
+  background:#fff8df;
+  border-color:#efd98c!important;
+  color:#6d5830;
+}
+.tutorial-section .alert-info{
+  background:#eef8fb;
+  border-color:#b9dfe9!important;
+  color:#46636c;
+}
+.tutorial-section .alert-success{
+  background:linear-gradient(135deg,#edf8f2,#f7fbf8)!important;
+  color:#1f6a4d;
+}
+.tutorial-section .step-card[style*="border-left"]{
+  border-left:4px solid var(--green-700)!important;
+}
+.tutorial-section .step-card .p-4{
+  border-color:#e1e9e4!important;
+  border-radius:18px!important;
+  box-shadow:none!important;
+  background:#fbfdfc!important;
+}
+.tutorial-section .step-card .p-4:hover{
+  background:#fff!important;
+  box-shadow:0 12px 26px rgba(11,75,54,.06)!important;
+}
+.tutorial-section .step-card .fs-5{
+  font-size:1rem!important;
+}
+.tutorial-section .step-card .text-success{
+  color:var(--green-800)!important;
+}
+.tutorial-section .step-card .text-info{
+  color:#477887!important;
+}
+.tutorial-section .step-card .text-warning{
+  color:#a77a12!important;
+}
+.tutorial-section .step-card ol{
+  padding-left:1.15rem!important;
+}
+.tutorial-section .step-card strong{color:#31423b}
+@media(max-width:767.98px){
+  .tutorial-section{padding:68px 0 72px}
+  .tutorial-container{width:min(100% - 22px,900px)}
+  .tutorial-section .step-card{padding:28px 20px 24px;border-radius:20px}
+  .tutorial-section .step-badge{margin:-28px 0 18px -20px;padding:10px 17px}
+  .tutorial-section .code-box{padding:22px 14px 14px}
+  .tutorial-section .code-box code{font-size:.76rem!important}
+}
+
+@media(max-width:991.98px){.hero{padding-top:56px}.hero-visual{min-height:480px;margin-top:20px}.dashboard-window{position:relative;right:auto}.float-card{left:4px;bottom:20px}.feature-grid,.steps{grid-template-columns:repeat(2,1fr)}.habit-loop{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:767.98px){.hero h1{font-size:3rem}.hero-grid .text-col{text-align:center}.hero-copy{margin:0 auto}.hero-actions{justify-content:center}.trust-row{justify-content:center}.hero-visual{min-height:0;padding-bottom:15px}.dashboard-window{transform:none}.float-card{position:relative;left:auto;bottom:auto;margin:12px 0 0;width:auto;transform:none}.feature-grid,.steps,.habit-loop{grid-template-columns:1fr}.section{padding:72px 0}.demo-shell{padding:25px 18px}.cta-shell{padding:32px 20px}.phone{width:min(280px,100%)}}
+@media(max-width:575.98px){.navbar .btn-nav{display:none}.hero h1{font-size:2.65rem}.dashboard-window{border-radius:20px}.dash-shell{padding:12px}.dash-progress-card{padding:12px;gap:10px}.ring{width:82px;height:82px}.mini-stat{padding:9px}.mini-stat strong{font-size:.94rem}.hero{padding-top:42px}.section{padding:60px 0}.demo-shell{border-radius:24px}.wa{right:16px;bottom:16px}}
+</style>
+</head>
+
+<body>
+<div class="nav-shell">
+  <div class="container container-xl">
+    <nav class="navbar navbar-expand-lg">
+      <a class="brand" href="#top"><span class="brand-mark"><i class="bi bi-moon-stars-fill"></i></span><span>Yaumi</span></a>
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><i class="bi bi-list fs-2" style="color:var(--green-900)"></i></button>
+      <div class="collapse navbar-collapse" id="navMain">
+        <ul class="navbar-nav mx-auto align-items-lg-center">
+          <li class="nav-item"><a class="nav-link" href="#fitur">Fitur</a></li>
+          <li class="nav-item"><a class="nav-link" href="#demo">Demo</a></li>
+          <li class="nav-item"><a class="nav-link" href="#cara-kerja">Cara Kerja</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        </ul>
+        <a class="btn-nav d-inline-flex align-items-center gap-2" href="#mulai">Mulai Sekarang <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<main id="top">
+<section class="hero">
+  <div class="container container-xl">
+    <div class="row align-items-center g-5 hero-grid">
+      <div class="col-lg-6 text-col">
+        <span class="eyebrow"><i class="bi bi-stars"></i> Mutaba'ah harian yang modern</span>
+        <h1>Bukan sekadar mencatat. <span class="accent">Bangun kebiasaan baik.</span></h1>
+        <p class="hero-copy">Yaumi membantu Anda memantau amalan harian, melihat progres 7 hari terakhir, dan menemukan bagian yang perlu dievaluasi—dengan pengalaman yang terasa ringan, rapi, dan mudah dipakai setiap hari.</p>
+        <div class="hero-actions">
+          <a href="#demo" class="btn btn-primary"><i class="bi bi-play-circle-fill me-2"></i> Lihat Demo</a>
+          <a href="#mulai" class="btn btn-gold"><i class="bi bi-rocket-takeoff-fill me-2"></i> Mulai Gunakan Yaumi</a>
+        </div>
+        <div class="trust-row">
+          <span class="trust-chip"><i class="bi bi-check2-circle"></i> Ringan dipakai</span>
+          <span class="trust-chip"><i class="bi bi-phone"></i> Mobile-friendly</span>
+          <span class="trust-chip"><i class="bi bi-bar-chart-line"></i> Progress visual</span>
+          <span class="trust-chip"><i class="bi bi-cloud-check"></i> Berbasis Google Sheets</span>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="hero-visual">
+          <div class="hero-glow"></div>
+          <div class="dashboard-window">
+            <div class="window-bar"><span class="window-dot"></span><span class="window-dot"></span><span class="window-dot"></span><span class="window-label">Yaumi / Dashboard</span></div>
+            <div class="dash-shell">
+              <div class="dash-top"><div><div class="dash-mini-title">Mutaba'ah Yaumiyah</div><div style="font-size:.68rem;color:#819087;margin-top:3px;">Ahlan wa sahlan 👋</div></div><div class="dash-mini-date">Hari ini</div></div>
+              <div class="dash-progress-card">
+                <div class="ring"><span>82%</span></div>
+                <div class="dash-stats">
+                  <div class="mini-stat"><small>Rata-rata</small><strong>82%</strong></div>
+                  <div class="mini-stat"><small>Selesai</small><strong>4 / 5</strong></div>
+                  <div class="mini-stat"><small>Target</small><strong>5</strong></div>
+                  <div class="mini-stat"><small>Streak</small><strong>6 hari</strong></div>
+                </div>
+              </div>
+              <div class="habit-list">
+                <div class="habit-item"><div class="habit-check"><i class="bi bi-check-lg"></i></div><div style="flex:1"><strong>Sholat Wajib</strong><div class="habit-bar"><span style="width:100%"></span></div></div><div class="habit-meta">100%</div></div>
+                <div class="habit-item"><div class="habit-check"><i class="bi bi-check-lg"></i></div><div style="flex:1"><strong>Baca Al Qur'an</strong><div class="habit-bar"><span style="width:100%"></span></div></div><div class="habit-meta">200%</div></div>
+                <div class="habit-item"><div class="habit-check"><i class="bi bi-check-lg"></i></div><div style="flex:1"><strong>Dzikir Pagi/Petang</strong><div class="habit-bar"><span style="width:50%"></span></div></div><div class="habit-meta">50%</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="float-card"><div class="label">Smart insight</div><strong>Perlu evaluasi</strong><p>Yaumi membantu Anda melihat amalan mana yang perlu mendapat perhatian.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="proof-strip">
+  <div class="container container-xl">
+    <div class="proof-flex"><div class="proof-label">Dibuat untuk rutinitas nyata</div><div class="proof-items">
+      <span class="proof-item"><i class="bi bi-check-circle-fill text-success"></i> Harian</span>
+      <span class="proof-item"><i class="bi bi-bar-chart-fill text-success"></i> Evaluasi</span>
+      <span class="proof-item"><i class="bi bi-trophy-fill" style="color:var(--gold)"></i> Konsistensi</span>
+      <span class="proof-item"><i class="bi bi-phone-fill text-success"></i> Mobile-first</span>
+    </div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-xl">
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-5"><div class="problem-card">
+        <span class="eyebrow">Yang sering terjadi</span>
+        <h2 class="section-title mt-3 mb-3">Kita tahu targetnya. Tapi sulit melihat polanya.</h2>
+        <p class="section-copy">Banyak orang sudah punya niat baik, tetapi pencatatan yang terlalu rumit membuat kebiasaan cepat berhenti. Yang hilang bukan niatnya—feedback sehari-harinya.</p>
+        <ul class="list-clean">
+          <li><i class="bi bi-x-circle-fill"></i><span>Catatan amal tersebar dan sulit dibaca sebagai satu gambaran.</span></li>
+          <li><i class="bi bi-x-circle-fill"></i><span>Sulit tahu mana amalan yang sedang kuat dan mana yang menurun.</span></li>
+          <li><i class="bi bi-x-circle-fill"></i><span>Evaluasi sering dilakukan saat sudah terlalu lama berlalu.</span></li>
+        </ul>
+      </div></div>
+      <div class="col-lg-7"><div class="solution-card">
+        <span class="eyebrow">Dengan Yaumi</span>
+        <h2 class="section-title mt-3 mb-3">Jadikan evaluasi sebagai bagian kecil dari rutinitas.</h2>
+        <p class="section-copy">Yaumi menyatukan pencatatan harian, target, riwayat, dan grafik progres dalam satu alur. Anda cukup mengisi, melihat, lalu mengevaluasi.</p>
+        <div class="row g-3 mt-2">
+          <div class="col-md-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-check2-square"></i></div><h3>Isi dalam hitungan detik</h3><p>Input capaian harian dibuat sederhana agar hambatan untuk mencatat tetap rendah.</p></div></div>
+          <div class="col-md-6"><div class="feature-card"><div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div><h3>Lihat pola 7 hari</h3><p>Grafik membantu melihat naik-turun kebiasaan tanpa harus membaca baris spreadsheet satu per satu.</p></div></div>
+        </div>
+        <div class="quote">“Tujuan Yaumi bukan membuat Anda mengejar angka sebanyak mungkin, tetapi membantu Anda lebih sadar pada kebiasaan yang ingin dipelihara.”</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="fitur">
+  <div class="container container-xl">
+    <div class="row align-items-end g-4 mb-4">
+      <div class="col-lg-7"><span class="eyebrow">Fitur utama</span><h2 class="section-title mt-3 mb-3">Sederhana di permukaan. Berguna saat dievaluasi.</h2></div>
+      <div class="col-lg-5"><p class="section-copy mb-0">Dirancang untuk mengurangi friksi saat mencatat sekaligus memberi konteks ketika Anda ingin memperbaiki kebiasaan.</p></div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-journal-check"></i></div><h3>Harian</h3><p>Catat capaian setiap amalan, pantau progress, dan selesaikan target dengan alur yang ringkas.</p></div>
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-clock-history"></i></div><h3>Riwayat</h3><p>Lihat kembali catatan, revisi jika ada kesalahan, dan gunakan riwayat sebagai bahan evaluasi.</p></div>
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-bullseye"></i></div><h3>Target fleksibel</h3><p>Tambahkan amalan, tentukan target, satuan, dan urutan sesuai rutinitas pribadi Anda.</p></div>
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-bar-chart-line"></i></div><h3>Progress visual</h3><p>Grafik merangkum perkembangan sehingga perubahan kecil lebih mudah terlihat dari hari ke hari.</p></div>
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-lightbulb"></i></div><h3>Smart Motivator</h3><p>Pesan motivasi diturunkan dari performa terbaru untuk menyorot area yang perlu dipertahankan atau dievaluasi.</p></div>
+      <div class="feature-card"><div class="feature-icon"><i class="bi bi-phone"></i></div><h3>Nyaman di HP</h3><p>Tampilan responsif membuat pencatatan tetap nyaman tanpa terasa seperti spreadsheet desktop.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="demo">
+  <div class="container container-xl">
+    <div class="demo-shell">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-6"><div class="demo-copy">
+          <span class="eyebrow" style="background:rgba(255,255,255,.10);color:#d7efdf;border:1px solid rgba(255,255,255,.12);">Live preview</span>
+          <h2 class="section-title mt-3 mb-3">Lihat pengalaman Yaumi sebelum Anda mulai.</h2>
+          <p>Coba antarmuka aplikasinya langsung. Bayangkan alur hari Anda: mencatat capaian, memantau target, kemudian melihat grafik untuk tahu apa yang perlu diperbaiki.</p>
+          <ul class="demo-bullets">
+            <li><i class="bi bi-check2-circle"></i><span>Input harian yang ringkas dan mudah dipahami.</span></li>
+            <li><i class="bi bi-check2-circle"></i><span>Progress setiap amalan dapat dilihat secara visual.</span></li>
+            <li><i class="bi bi-check2-circle"></i><span>Grafik membantu membedakan amalan stabil, menurun, atau melampaui target.</span></li>
+          </ul>
+          <div class="mt-4 d-flex flex-wrap gap-2"><a href="#mulai" class="btn btn-gold"><i class="bi bi-arrow-down-circle me-2"></i> Cara Mulai</a><a href="#faq" class="btn btn-light" style="border-radius:14px;font-weight:800;">Pertanyaan Umum</a></div>
+        </div></div>
+        <div class="col-lg-6"><div class="phone-wrap"><div class="phone">
+          <iframe src="https://script.google.com/macros/s/AKfycbwfB2wj1RSsanQiryiQsLQihPBg45xTxZNIKPXBs0h8m02-ubOtXU6k33QX3kH3OCLe/exec" loading="lazy" title="Live Demo Yaumi"></iframe>
+        </div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section pt-0" id="cara-kerja">
+  <div class="container container-xl">
+    <div class="row align-items-end g-4">
+      <div class="col-lg-7"><span class="eyebrow">Alur penggunaan</span><h2 class="section-title mt-3 mb-3">Empat langkah kecil yang menjaga siklus evaluasi.</h2></div>
+      <div class="col-lg-5"><p class="section-copy mb-0">Yaumi dibuat agar evaluasi tidak terasa seperti pekerjaan tambahan, melainkan bagian natural dari rutinitas harian.</p></div>
+    </div>
+    <div class="habit-loop">
+      <div class="loop-card"><div class="loop-num">01</div><h3>Tentukan target</h3><p>Masukkan amalan yang ingin Anda jaga beserta targetnya.</p></div>
+      <div class="loop-card"><div class="loop-num">02</div><h3>Catat capaian</h3><p>Setelah aktivitas selesai, masukkan angka capaian dengan cepat.</p></div>
+      <div class="loop-card"><div class="loop-num">03</div><h3>Lihat pola</h3><p>Gunakan riwayat dan grafik untuk melihat perubahan dari hari ke hari.</p></div>
+      <div class="loop-card"><div class="loop-num">04</div><h3>Evaluasi & lanjut</h3><p>Pilih satu hal kecil untuk diperbaiki lalu ulangi siklusnya besok.</p></div>
+    </div>
+  </div>
+</section>
+
+  <!-- Tutorial Section -->
+  <section id="mulai" class="tutorial-section">
+    <div class="container tutorial-container">
+      <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--primary-dark);">Panduan Singkat (Hanya 3 Menit)</h2>
+        <p class="text-muted fs-5">Dirancang khusus untuk orang awam. Cukup <strong>Copy & Paste!</strong></p>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="step-card">
+        <div class="step-badge">Langkah 1</div>
+        <div class="step-content">
+          <h4 class="fw-bold" style="color: var(--primary-dark);">Siapkan Kanvas Kosong</h4>
+          <p class="text-muted fs-6">
+            Buka browser Anda dan buat file Google Sheets baru (atau ketik <a href="https://sheets.new" target="_blank" class="fw-bold text-success text-decoration-none">sheets.new</a> di browser).<br>
+            Biarkan kosong saja! Setelah itu, klik menu <strong>Ekstensi</strong> di bagian atas, lalu pilih <strong>Apps Script</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card">
+        <div class="step-badge">Langkah 2</div>
+        <div class="step-content">
+          <h4 class="fw-bold" style="color: var(--primary-dark);">Hubungkan ke Mesin Utama</h4>
+          <p class="text-muted mb-3">
+            Di layar Apps Script (panel sebelah kiri), temukan tulisan <strong>Pustaka (Libraries)</strong> dan klik tombol <strong>+ (Tambah)</strong>.
+          </p>
+          <div class="code-box mb-3">
+            <button class="btn-copy" onclick="copyText('scriptId')"><i class="bi bi-files"></i> Salin ID</button>
+            <span class="text-muted">// Masukkan Script ID ini:</span><br>
+            <code id="scriptId" class="fs-6 text-warning">10OXHSG08AUQ60p2oKADE94AGzWyTZLDVpX0NPcEMatHFRcaJqhBhjNEJ</code>
+          </div>
+          
+          <div class="alert alert-warning border-warning shadow-sm mt-3 d-flex gap-3 align-items-start">
+            <i class="bi bi-exclamation-triangle-fill fs-2 text-warning mt-1"></i>
+            <div>
+              <strong>SANGAT PENTING:</strong> Setelah klik <em>Cari (Look up)</em>, Anda <strong>wajib</strong> memastikan kotak <strong>Version</strong> persis <code class="fs-5 bg-white px-2 py-1 rounded text-danger fw-bold">1</code> dan kotak <strong>ID (Identifier)</strong> menjadi persis: <code class="fs-5 bg-white px-2 py-1 rounded text-danger fw-bold">Yaumi</code> (perhatikan huruf besar/kecilnya). Lalu klik Tambahkan/Add.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card">
+        <div class="step-badge">Langkah 3</div>
+        <div class="step-content">
+          <h4 class="fw-bold" style="color: var(--primary-dark);">Tanamkan Kode Otomatis</h4>
+          <p class="text-muted mb-2">
+            Di tengah layar Apps Script, Anda akan melihat file bernama <code>Code.gs</code>. <strong>Hapus semua tulisan yang ada di sana</strong>, lalu tempel <strong>(paste)</strong> kode berikut ini:
+          </p>
+          
+          <div class="code-box pt-5"> <!-- Tambahan pt-5 agar teks tidak tertabrak tombol -->
+            <button class="btn-copy" onclick="copyText('bridgeCode')"><i class="bi bi-files"></i> Salin Kode</button>
+<!-- Hapus class text-wrap, ganti dengan style white-space: pre dan overflow-x: auto -->
+<pre id="bridgeCode" class="m-0 text-light" style="white-space: pre; overflow-x: auto; font-size: 0.9rem;"><code>function doGet(e) { return Yaumi.renderAppUI(); }
+
+function SetupDatabaseOtomatis() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  
+  let shAmalan = ss.getSheetByName("Amalan");
+  if (!shAmalan) { shAmalan = ss.insertSheet("Amalan"); shAmalan.appendRow(["Amalan", "Target", "Satuan"]); shAmalan.getRange("A1:C1").setFontWeight("bold").setBackground("#14704e").setFontColor("white"); }
+  
+  let shLog = ss.getSheetByName("Log");
+  if (!shLog) { shLog = ss.insertSheet("Log"); shLog.appendRow(["Tanggal", "Amalan", "Target", "Capaian", "Persentase"]); shLog.getRange("A1:E1").setFontWeight("bold").setBackground("#14704e").setFontColor("white"); }
+  
+  let shProfil = ss.getSheetByName("Profil");
+  if (!shProfil) { shProfil = ss.insertSheet("Profil"); shProfil.appendRow(["Nama Panggilan", "Nama Anda (Ubah Ini)"]); shProfil.getRange("A1").setFontWeight("bold").setBackground("#d4af37"); }
+  
+  let shBawaan = ss.getSheetByName("Sheet1"); if (shBawaan) ss.deleteSheet(shBawaan);
+  SpreadsheetApp.getUi().alert("Alhamdulillah! Database berhasil dibuat otomatis. Silakan ubah nama Anda di sheet Profil.");
+}
+
+function getAmalan() { return Yaumi.getAmalan(); }
+function saveAmalan(a, t, s) { return Yaumi.saveAmalan(a, t, s); }
+function deleteAmalan(r) { return Yaumi.deleteAmalan(r); }
+function editAmalanRow(r, a, t, s) { return Yaumi.editAmalanRow(r, a, t, s); }
+function moveAmalan(r, d) { return Yaumi.moveAmalan(r, d); }
+function saveLogHarian(t, l) { return Yaumi.saveLogHarian(t, l); }
+function getLogByDate(t) { return Yaumi.getLogByDate(t); }
+function getRiwayat(f) { return Yaumi.getRiwayat(f); }
+function deleteRiwayat(r) { return Yaumi.deleteRiwayat(r); }
+function editRiwayatLog(r, n) { return Yaumi.editRiwayatLog(r, n); }
+function getProgressData() { return Yaumi.getProgressData(); }</code></pre>
+          </div>
+
+          <div class="alert alert-info mt-4 d-flex gap-3 shadow-sm border-info align-items-start">
+            <i class="bi bi-robot fs-2 text-info mt-1"></i>
+            <div>
+              <h6 class="fw-bold mb-1">Bangun Database 1 Detik!</h6>
+              Tekan <strong>Ctrl+S</strong> untuk menyimpan script tersebut. Lalu di menu atas, pilih fungsi <strong>SetupDatabaseOtomatis</strong> lalu klik <strong>▶ Jalankan (Run)</strong>.<br>
+              <small class="text-muted d-block mt-2"><em>Catatan: Google akan meminta "Otorisasi" untuk mengedit file Anda sendiri. Klik "Review Permissions", pilih email Anda, klik "Advanced" (Lanjutan), lalu "Go to Untitled Project (Unsafe)". Jangan khawatir, ini 100% aman karena skrip ini bekerja di file Anda sendiri.</em></small>
+              <span class="d-block mt-2">Kembali ke tab Google Sheets Anda, dan <em>Ta-da!</em> Kolom Amalan, Log, dan Profil telah terbuat dengan rapi! <strong>Ubah nama</strong> di tab profil agar sapaan AI-nya memanggil Anda.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card" style="border-left: 6px solid var(--primary-main);">
+        <div class="step-badge">Langkah 4</div>
+        <div class="step-content">
+          <h4 class="fw-bold text-success"><i class="bi bi-rocket-takeoff-fill me-2"></i>Selesai! Luncurkan Aplikasi (Deploy)</h4>
+          <ol class="text-muted ps-3 mb-0" style="line-height: 1.8;">
+            <li>Di pojok kanan atas Apps Script, klik tombol biru <strong>Terapkan (Deploy)</strong>.</li>
+            <li>Pilih <strong>Deployment Baru</strong>.</li>
+            <li>Klik logo Gigi Roda (Pilih jenis), lalu pilih <strong>Aplikasi Web (Web App)</strong>.</li>
+            <li>Pada kotak <em>Akses (Who has access)</em>, pilih <strong>Hanya saya</strong>.</li>
+            <li>Klik <strong>Terapkan</strong>. Selesai! Anda akan mendapatkan URL Aplikasi Anda.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Step 5 (Fitur Rahasia: Add to Home Screen) -->
+      <div class="step-card" style="border-left: 6px solid var(--primary-main);">
+        <div class="step-badge">Langkah 5</div>
+        <div class="step-content">
+          <h4 class="fw-bold text-success"><i class="bi bi-rocket-takeoff-fill me-2"></i>Pasang di Layar Utama HP (Wajib Dicoba!)</h4>
+          <p class="text-muted mb-4">
+            Jadikan Mutaba'ah Yaumiyah ini seperti aplikasi asli di HP Anda! Cukup klik ikon aplikasinya di layar depan HP tanpa perlu mengetik <i>link</i> lagi setiap hari.
+          </p>
+
+          <div class="row g-3">
+            <!-- Box Android -->
+            <div class="col-md-6">
+              <div class="p-4 border rounded-4 bg-white shadow-sm h-100 position-relative overflow-hidden">
+                <h6 class="fw-bold text-success mb-3 fs-5"><i class="bi bi-android2 me-2"></i>Pengguna Android</h6>
+                <ol class="text-muted ps-3 mb-0" style="line-height: 1.7; font-size: 0.95rem;">
+                  <li>Buka link aplikasi menggunakan <strong>Google Chrome</strong>.</li>
+                  <li>Klik ikon <strong>Titik Tiga (⋮)</strong> di pojok kanan atas browser.</li>
+                  <li>Pilih menu <strong>"Tambahkan ke Layar Utama"</strong> <br><i>(Add to Home Screen)</i>.</li>
+                  <li>Klik Tambah.</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- Box iPhone / Apple -->
+            <div class="col-md-6">
+              <div class="p-4 border rounded-4 bg-white shadow-sm h-100 position-relative overflow-hidden">
+                <h6 class="fw-bold text-success mb-3 fs-5"><i class="bi bi-apple me-2"></i>Pengguna iPhone</h6>
+                <ol class="text-muted ps-3 mb-0" style="line-height: 1.7; font-size: 0.95rem;">
+                  <li>Buka link aplikasi menggunakan browser <strong>Safari</strong>.</li>
+                  <li>Klik ikon <strong>Bagikan (Share) <i class="bi bi-box-arrow-up border rounded px-1"></i></strong> di menu bawah.</li>
+                  <li>Gulir ke bawah, pilih <strong>"Tambah ke Layar Utama"</strong> <br><i>(Add to Home Screen)</i>.</li>
+                  <li>Klik Tambah.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alert Sukses Akhir -->
+          <div class="alert alert-success mt-4 mb-0 py-3 px-4 d-flex align-items-center gap-3 shadow-sm border-0 rounded-4" style="background: linear-gradient(to right, #d1e7dd, #e9f5ef);">
+            <i class="bi bi-check-circle-fill text-success d-none d-sm-block" style="font-size: 2.5rem;"></i>
+            <div>
+              <h5 class="fw-bold text-success mb-1">Alhamdulillah, Sempurna! 🎉</h5>
+              <span class="text-success-emphasis" style="font-size: 0.95rem;">Sekarang aplikasi pelacak amalan harian (mutaba'ah yaumiyah) Anda sudah terpasang layaknya aplikasi profesional. Selamat mengejar istiqomah!</span>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
+  </section>
+
+<section class="section pt-0 faq" id="faq">
+  <div class="container container-xl"><div class="row justify-content-center"><div class="col-lg-9">
+    <div class="text-center mb-4"><span class="eyebrow">FAQ</span><h2 class="section-title mt-3 mb-3">Pertanyaan yang paling sering muncul.</h2><p class="section-copy">Jawaban singkat agar Anda bisa memutuskan dengan tenang sebelum mulai.</p></div>
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">Apa fungsi utama Yaumi?</button></h2><div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion"><div class="accordion-body">Yaumi adalah dashboard mutaba'ah harian untuk mencatat capaian amalan, mengelola target, melihat riwayat, dan mengevaluasi progres melalui visualisasi data.</div></div></div>
+      <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Apakah saya bisa menentukan amalan sendiri?</button></h2><div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Ya. Modul Target memungkinkan Anda menambahkan nama amalan, target, satuan, serta mengatur urutannya sesuai kebutuhan pribadi.</div></div></div>
+      <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Bagaimana jika capaian melebihi 100%?</button></h2><div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Nilai di atas target tetap bisa dipertahankan sebagai data capaian. Dalam visualisasi progres yang baru, skala sumbu grafik menyesuaikan nilai tertinggi sehingga capaian seperti 150% atau 200% tetap terbaca.</div></div></div>
+      <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Apakah Yaumi harus dipakai setiap hari?</button></h2><div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Yaumi dirancang untuk ritme harian, tetapi fokus utamanya adalah membangun kebiasaan evaluasi yang realistis. Yang penting bukan sempurna setiap hari, melainkan kembali melanjutkan ketika terlewat.</div></div></div>
+      <div class="accordion-item"><h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">Apakah fitur “Smart Motivator” benar-benar menggunakan AI eksternal?</button></h2><div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion"><div class="accordion-body">Pada versi aplikasi yang sekarang, pesan motivasi ditentukan dari aturan capaian dan rata-rata progres. Jadi istilah “Smart Motivator” dipakai untuk menjelaskan umpan balik otomatis berbasis data, bukan klaim bahwa aplikasi memanggil model AI eksternal.</div></div></div>
+    </div>
+  </div></div></div>
+</section>
+
+<section class="cta">
+  <div class="container container-xl"><div class="cta-shell">
+    <span class="eyebrow">Satu langkah kecil hari ini</span>
+    <h2 class="section-title mt-3 mb-3">Mulai catat. Mulai melihat polanya. Mulai bertumbuh.</h2>
+    <p class="section-copy mx-auto" style="max-width:700px;">Yaumi bukan tentang mengejar angka sempurna. Yaumi adalah alat bantu untuk membuat evaluasi lebih terlihat, lebih ringan, dan lebih mudah dilanjutkan.</p>
+    <div class="d-flex justify-content-center flex-wrap gap-2 mt-4"><a href="#demo" class="btn btn-primary"><i class="bi bi-play-circle-fill me-2"></i> Coba Demo</a><a href="#mulai" class="btn btn-gold"><i class="bi bi-rocket-takeoff-fill me-2"></i> Mulai Sekarang</a></div>
+    <div class="tiny-note mt-4">“Istiqomah tumbuh dari langkah-langkah kecil yang terus diulang.”</div>
+  </div></div>
+</section>
+</main>
+
+<footer>
+  <div class="container container-xl">
+    <div class="row align-items-center g-3">
+      <div class="col-md-6"><div class="footer-brand"><i class="bi bi-moon-stars-fill text-warning me-2"></i>Yaumi</div><div class="small mt-2">Dashboard mutaba'ah harian untuk membantu menjaga kebiasaan baik.</div></div>
+      <div class="col-md-6 text-md-end"><a class="footer-link small me-3" href="#fitur">Fitur</a><a class="footer-link small me-3" href="#demo">Demo</a><a class="footer-link small" href="#faq">FAQ</a></div>
+    </div>
+    <div class="border-top border-light border-opacity-10 mt-4 pt-4 small text-center text-md-start">© 2026 Yaumi. Dibangun dengan tujuan membuat evaluasi harian terasa lebih ringan.</div>
+  </div>
+</footer>
+
+<a class="wa" href="https://wa.me/6281539295726?text=Halo%20Admin,%20saya%20ingin%20mencoba%20Yaumi." target="_blank" rel="noopener" aria-label="Hubungi Admin via WhatsApp" title="Hubungi Admin via WhatsApp"><i class="bi bi-whatsapp"></i></a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function copyText(elementId){
+  const el=document.getElementById(elementId);
+  if(!el) return;
+  const textToCopy=el.innerText||el.textContent||'';
+  const btn=el.parentElement ? el.parentElement.querySelector('.btn-copy') : null;
+
+  navigator.clipboard.writeText(textToCopy).then(()=>{
+    if(btn){
+      const original=btn.innerHTML;
+      btn.innerHTML='<i class="bi bi-check2-circle"></i> Tersalin';
+      btn.style.background='var(--green-700)';
+      setTimeout(()=>{
+        btn.innerHTML=original;
+        btn.style.background='';
+      },1800);
+    }
+  }).catch(()=>{
+    const range=document.createRange();
+    range.selectNodeContents(el);
+    const selection=window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    try{ document.execCommand('copy'); }catch(e){}
+    selection.removeAllRanges();
+  });
+}
+</script>
+
+</body>
+</html>
